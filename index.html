@@ -1252,6 +1252,15 @@
             const mode = document.getElementById('form-mode-flag').value;
             const enteredName = document.getElementById('emp-name').value;
 
+            // Prevent creating duplicate base profiles
+            if (mode === 'new_profile') {
+                const nameExists = employees.some(e => e.name.toLowerCase() === enteredName.toLowerCase());
+                if (nameExists) {
+                    showToast('Profile Exists', `${enteredName} already exists in the system directory. Please search their name to add logs.`, 'warning', '⚠️');
+                    return; // Halt execution
+                }
+            }
+
             // Default payload jisme sirf Name hai
             let data = { name: enteredName };
 
