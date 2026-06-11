@@ -9,7 +9,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB Atlas cluster pipeline
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://kunal:KdVygwFo0Anau8uX@hitesh.cqczgkd.mongodb.net/employeeDB';
 mongoose.connect(MONGODB_URI)
     .then(() => console.log("Cloud MongoDB Connected Successfully"))
     .catch(err => console.error("Database connection failure context: ", err));
