@@ -9,16 +9,35 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Serverless-Optimized MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://kunal:KdVygwFo0Anau8uX@hitesh.cqczgkd.mongodb.net/employeeDB';
-if (mongoose.connection.readyState === 0) {
-    mongoose.connect(MONGODB_URI, {
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
-    })
-    .then(() => console.log("Cloud MongoDB Connected Successfully"))
-    .catch(err => console.error("Database connection failure: ", err));
-}
+// Serverless-Optimized MongoDB Connection Middleware
+let isConnected = false;
+const connectDB = async () => {
+    if (isConnected) return;
+    try {
+        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://kunal:KdVygwFo0Anau8uX@hitesh.cqczgkd.mongodb.net/employeeDB';
+        const db = await mongoose.connect(MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+        });
+        isConnected = db.connections[0].readyState === 1;
+        console.log("Cloud MongoDB Connected Successfully");
+    } catch (err) {
+        console.error("Database connection failure: ", err);
+        throw err;
+    }
+};
+
+// Apply database connection barrier to all API routes
+app.use(async (req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+        try {
+            await connectDB();
+        } catch (err) {
+            return res.status(500).json({ error: "Operation server database error routing response. Please check MongoDB Atlas IP Whitelist or credentials." });
+        }
+    }
+    next();
+});
 
 // Employee Schema
 const employeeSchema = new mongoose.Schema({
