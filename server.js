@@ -19,9 +19,22 @@ mongoose.connect(MONGODB_URI)
 const employeeSchema = new mongoose.Schema({
     name: { type: String, required: true },
     designation: String,
-    matchId: String,
+    
+    // Legacy support for single matchId
+    matchId: String, 
+    
+    // Expanded Match IDs & Error Counts
+    matchId1: String,
+    errorCount1: { type: Number, default: 0 },
+    matchId2: String,
+    errorCount2: { type: Number, default: 0 },
+    matchId3: String,
+    errorCount3: { type: Number, default: 0 },
+    matchId4: String,
+    errorCount4: { type: Number, default: 0 },
+
     date: String,
-    errorCount: Number,
+    errorCount: { type: Number, default: 0 }, // This acts as the DAILY total now
     behaviour: String,
     lateMark: String,
     totalErrors: { type: Number, default: 0 },         
