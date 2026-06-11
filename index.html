@@ -742,12 +742,26 @@
                             <input type="text" id="emp-name" required>
                         </div>
                         <div id="extra-log-fields" style="display: contents;">
-                            <div class="form-group"><label>Designation</label><input type="text" id="emp-designation">
-                            </div>
-                            <div class="form-group"><label>Match ID</label><input type="text" id="emp-matchId"></div>
+                            <div class="form-group"><label>Designation</label><input type="text" id="emp-designation"></div>
                             <div class="form-group"><label>Date</label><input type="date" id="emp-date"></div>
-                            <div class="form-group"><label>Error Count</label><input type="number" id="emp-errorCount">
-                            </div>
+                            
+                            <!-- 4 MATCH ID & ERROR COUNT SLOTS -->
+                            <div style="grid-column: 1 / -1; padding: 10px; background: #e0e7ff; border-radius: 8px; border: 1px dashed #6366f1; margin-top: 10px; margin-bottom: 5px;"><strong style="font-size: 13px; color: #4338ca;">Match Logs Entry (Optional up to 4)</strong></div>
+                            
+                            <div class="form-group"><label>Match ID 1</label><input type="text" id="emp-matchId1"></div>
+                            <div class="form-group"><label>Error Count 1</label><input type="number" id="emp-errorCount1" placeholder="0"></div>
+                            
+                            <div class="form-group"><label>Match ID 2</label><input type="text" id="emp-matchId2"></div>
+                            <div class="form-group"><label>Error Count 2</label><input type="number" id="emp-errorCount2" placeholder="0"></div>
+                            
+                            <div class="form-group"><label>Match ID 3</label><input type="text" id="emp-matchId3"></div>
+                            <div class="form-group"><label>Error Count 3</label><input type="number" id="emp-errorCount3" placeholder="0"></div>
+                            
+                            <div class="form-group"><label>Match ID 4</label><input type="text" id="emp-matchId4"></div>
+                            <div class="form-group"><label>Error Count 4</label><input type="number" id="emp-errorCount4" placeholder="0"></div>
+
+                            <div style="grid-column: 1 / -1; margin-top: 10px;"></div>
+                            
                             <div class="form-group"><label>Behaviour</label><input type="text" id="emp-behaviour"></div>
                             <div class="form-group">
                                 <label>Late Mark?</label>
@@ -819,11 +833,24 @@
 
                 <div id="detail-view" class="profile-view" style="display: none;">
                     <div class="data-grid-view">
-                        <div class="data-row"><span>Full Name</span><strong id="view-name"></strong></div>
-                        <div class="data-row"><span>Designation</span><strong id="view-designation"></strong></div>
-                        <div class="data-row"><span>Match ID</span><strong id="view-matchId"></strong></div>
-                        <div class="data-row"><span>Date Logged</span><strong id="view-date"></strong></div>
-                        <div class="data-row"><span>Error Count</span><strong id="view-errorCount"></strong></div>
+                        <div class="data-row"><span>Full Name</span><strong id="view-name" style="color:var(--text-main);"></strong></div>
+                        <div class="data-row"><span>Designation</span><strong id="view-designation" style="color:var(--text-main);"></strong></div>
+                        <div class="data-row" style="grid-column: 1 / -1; justify-content: space-between; border-bottom: 1px dashed var(--border);"><span>Date Logged</span><strong id="view-date"></strong></div>
+                        
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 1</span><strong id="view-matchId1" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 1</span><strong id="view-errorCount1" style="color:#b91c1c;"></strong></div>
+                        
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 2</span><strong id="view-matchId2" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 2</span><strong id="view-errorCount2" style="color:#b91c1c;"></strong></div>
+                        
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 3</span><strong id="view-matchId3" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 3</span><strong id="view-errorCount3" style="color:#b91c1c;"></strong></div>
+                        
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 4</span><strong id="view-matchId4" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 4</span><strong id="view-errorCount4" style="color:#b91c1c;"></strong></div>
+
+                        <div class="data-row" style="grid-column: 1 / -1; justify-content: center; background: #fff1f2; border: 2px dashed #f43f5e;"><span>Total Daily Errors For This Log:</span><strong id="view-errorCount" style="margin-left: 10px; font-size: 16px; color: #e11d48;"></strong></div>
+                        
                         <div class="data-row"><span>Behaviour</span><strong id="view-behaviour"></strong></div>
                         <div class="data-row"><span>Late Mark Flag</span><strong id="view-lateMark"></strong></div>
                     </div>
@@ -1012,7 +1039,16 @@
                 document.getElementById('emp-id').value = '';
                 document.getElementById('emp-name').value = name;
                 document.getElementById('emp-designation').value = latestLog.designation || '';
-                document.getElementById('emp-matchId').value = latestLog.matchId || '';
+                
+                // Clear all 4 match details for a fresh daily log
+                document.getElementById('emp-matchId1').value = '';
+                document.getElementById('emp-errorCount1').value = '';
+                document.getElementById('emp-matchId2').value = '';
+                document.getElementById('emp-errorCount2').value = '';
+                document.getElementById('emp-matchId3').value = '';
+                document.getElementById('emp-errorCount3').value = '';
+                document.getElementById('emp-matchId4').value = '';
+                document.getElementById('emp-errorCount4').value = '';
                 document.getElementById('emp-date').value = new Date().toISOString().split('T')[0];
             };
             filterEmployeeHistory();
@@ -1058,10 +1094,14 @@
 
             // Table populate karo
             validLogs.forEach(log => {
+                // Combine all available match IDs into a single display string
+                const matchIdsArray = [log.matchId1, log.matchId2, log.matchId3, log.matchId4, log.matchId].filter(Boolean);
+                const displayMatchIds = matchIdsArray.length > 0 ? matchIdsArray.join(', ') : '-';
+                
                 tableBody.innerHTML += `
                     <tr onclick="viewSingleDayLog('${log._id}')">
                         <td><strong>${log.date || '-'}</strong></td>
-                        <td><code style="background: var(--bg-body); padding:2px 6px; border-radius:4px;">${log.matchId || '-'}</code></td>
+                        <td><code style="background: var(--bg-body); padding:2px 6px; border-radius:4px; font-size:11px;">${displayMatchIds}</code></td>
                         <td style="color: ${log.errorCount > 0 ? '#b91c1c' : 'var(--text-main)'}; font-weight:500;">${log.errorCount || 0} Errors</td>
                         <td><span style="font-size:12px; color: var(--text-muted); font-weight:500;">${log.behaviour || '-'}</span></td>
                         <td><span style="color: ${log.lateMark === 'Yes' ? 'red' : 'green'}; font-weight:600;">${log.lateMark || 'No'}</span></td>
@@ -1079,12 +1119,23 @@
 
             document.getElementById('view-name').innerText = emp.name;
             document.getElementById('view-designation').innerText = emp.designation || '-';
-            document.getElementById('view-matchId').innerText = emp.matchId || '-';
             document.getElementById('view-date').innerText = emp.date || '-';
+            
+            // Map the 4 dynamic match fields to the UI natively, defaulting to legacy log if applicable
+            document.getElementById('view-matchId1').innerText = emp.matchId1 || emp.matchId || '-';
+            document.getElementById('view-errorCount1').innerText = emp.errorCount1 || (emp.matchId ? emp.errorCount : '') || '0';
+            document.getElementById('view-matchId2').innerText = emp.matchId2 || '-';
+            document.getElementById('view-errorCount2').innerText = emp.errorCount2 || '0';
+            document.getElementById('view-matchId3').innerText = emp.matchId3 || '-';
+            document.getElementById('view-errorCount3').innerText = emp.errorCount3 || '0';
+            document.getElementById('view-matchId4').innerText = emp.matchId4 || '-';
+            document.getElementById('view-errorCount4').innerText = emp.errorCount4 || '0';
+            
+            // Display mathematically calculated daily total
             document.getElementById('view-errorCount').innerText = emp.errorCount || '0';
+            
             document.getElementById('view-behaviour').innerText = emp.behaviour || '-';
             document.getElementById('view-lateMark').innerText = emp.lateMark || 'No';
-            // Yahan se view-percentage assign karne wali line delete kar di gayi hai
 
             document.getElementById('trigger-back-history-btn').onclick = () => {
                 document.getElementById('detail-view').style.display = 'none';
@@ -1104,12 +1155,21 @@
 
                 document.getElementById('emp-id').value = emp._id;
                 document.getElementById('emp-name').value = emp.name;
-                document.getElementById('emp-designation').value = emp.designation;
-                document.getElementById('emp-matchId').value = emp.matchId;
-                document.getElementById('emp-date').value = emp.date;
-                document.getElementById('emp-errorCount').value = emp.errorCount;
-                document.getElementById('emp-behaviour').value = emp.behaviour;
-                document.getElementById('emp-lateMark').value = emp.lateMark;
+                document.getElementById('emp-designation').value = emp.designation || '';
+                document.getElementById('emp-date').value = emp.date || '';
+                
+                // Backfill legacy logs into Slot 1
+                document.getElementById('emp-matchId1').value = emp.matchId1 || emp.matchId || '';
+                document.getElementById('emp-errorCount1').value = emp.errorCount1 || (emp.matchId ? emp.errorCount : '') || '';
+                document.getElementById('emp-matchId2').value = emp.matchId2 || '';
+                document.getElementById('emp-errorCount2').value = emp.errorCount2 || '';
+                document.getElementById('emp-matchId3').value = emp.matchId3 || '';
+                document.getElementById('emp-errorCount3').value = emp.errorCount3 || '';
+                document.getElementById('emp-matchId4').value = emp.matchId4 || '';
+                document.getElementById('emp-errorCount4').value = emp.errorCount4 || '';
+                
+                document.getElementById('emp-behaviour').value = emp.behaviour || '';
+                document.getElementById('emp-lateMark').value = emp.lateMark || 'No';
             };
         }
 
@@ -1197,12 +1257,27 @@
 
             // Agar Dashboard se profile nahi ban rahi, tab baaki data bhi payload mein bhejo
             if (mode !== 'new_profile') {
+                const ec1 = parseInt(document.getElementById('emp-errorCount1').value) || 0;
+                const ec2 = parseInt(document.getElementById('emp-errorCount2').value) || 0;
+                const ec3 = parseInt(document.getElementById('emp-errorCount3').value) || 0;
+                const ec4 = parseInt(document.getElementById('emp-errorCount4').value) || 0;
+                const totalDailyErrors = ec1 + ec2 + ec3 + ec4;
+                
                 data = {
                     name: enteredName,
                     designation: document.getElementById('emp-designation').value,
-                    matchId: document.getElementById('emp-matchId').value,
                     date: document.getElementById('emp-date').value,
-                    errorCount: parseInt(document.getElementById('emp-errorCount').value) || 0,
+                    
+                    matchId1: document.getElementById('emp-matchId1').value,
+                    errorCount1: ec1,
+                    matchId2: document.getElementById('emp-matchId2').value,
+                    errorCount2: ec2,
+                    matchId3: document.getElementById('emp-matchId3').value,
+                    errorCount3: ec3,
+                    matchId4: document.getElementById('emp-matchId4').value,
+                    errorCount4: ec4,
+                    
+                    errorCount: totalDailyErrors, // This will be calculated natively into total errors!
                     behaviour: document.getElementById('emp-behaviour').value,
                     lateMark: document.getElementById('emp-lateMark').value
                 };
