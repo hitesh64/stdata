@@ -1,31 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Management Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         /* --- PREMIUM WHITE & PURPLE UI/UX --- */
         :root {
-            --primary: #7e22ce; /* Stylish Deep Purple */
-            --primary-light: #f3e8ff; /* Soft Purple Backgrounds */
+            --primary: #7e22ce;
+            /* Stylish Deep Purple */
+            --primary-light: #f3e8ff;
+            /* Soft Purple Backgrounds */
             --primary-hover: #6b21a8;
-            --bg-body: #f8fafc; /* Very light grey/white for contrast */
+            --bg-body: #f8fafc;
+            /* Very light grey/white for contrast */
             --surface: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
             --shadow-lg: 0 10px 25px -5px rgba(126, 34, 206, 0.15);
             --radius: 12px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
 
-        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; }
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
 
-        .layout { display: flex; min-height: 100vh; position: relative; }
+        .layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
 
         /* --- TOAST NOTIFICATION SYSTEM --- */
         .toast-container {
@@ -45,7 +63,7 @@
             color: var(--text-main);
             padding: 16px 20px 20px 20px;
             border-radius: var(--radius);
-            box-shadow: 0 15px 35px -5px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: flex-start;
             gap: 14px;
@@ -109,7 +127,7 @@
             bottom: 0;
             left: 0;
             height: 4px;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
             width: 100%;
         }
 
@@ -121,35 +139,90 @@
         }
 
         /* Toast Variants */
-        .toast.success { border-left: 5px solid #10b981; }
-        .toast.success .toast-icon { background: #d1fae5; color: #10b981; }
-        .toast.success .toast-progress-bar { background: #10b981; }
+        .toast.success {
+            border-left: 5px solid #10b981;
+        }
 
-        .toast.error { border-left: 5px solid #ef4444; }
-        .toast.error .toast-icon { background: #fee2e2; color: #ef4444; }
-        .toast.error .toast-progress-bar { background: #ef4444; }
+        .toast.success .toast-icon {
+            background: #d1fae5;
+            color: #10b981;
+        }
 
-        .toast.info { border-left: 5px solid #3b82f6; }
-        .toast.info .toast-icon { background: #dbeafe; color: #3b82f6; }
-        .toast.info .toast-progress-bar { background: #3b82f6; }
-        
-        .toast.warning { border-left: 5px solid #f59e0b; }
-        .toast.warning .toast-icon { background: #fef3c7; color: #f59e0b; }
-        .toast.warning .toast-progress-bar { background: #f59e0b; }
+        .toast.success .toast-progress-bar {
+            background: #10b981;
+        }
+
+        .toast.error {
+            border-left: 5px solid #ef4444;
+        }
+
+        .toast.error .toast-icon {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+
+        .toast.error .toast-progress-bar {
+            background: #ef4444;
+        }
+
+        .toast.info {
+            border-left: 5px solid #3b82f6;
+        }
+
+        .toast.info .toast-icon {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        .toast.info .toast-progress-bar {
+            background: #3b82f6;
+        }
+
+        .toast.warning {
+            border-left: 5px solid #f59e0b;
+        }
+
+        .toast.warning .toast-icon {
+            background: #fef3c7;
+            color: #f59e0b;
+        }
+
+        .toast.warning .toast-progress-bar {
+            background: #f59e0b;
+        }
 
         @keyframes toastSlideIn {
-            from { transform: translateX(120%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         @keyframes toastSlideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(120%); opacity: 0; }
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(120%);
+                opacity: 0;
+            }
         }
 
         @keyframes toastProgress {
-            from { transform: scaleX(1); }
-            to { transform: scaleX(0); }
+            from {
+                transform: scaleX(1);
+            }
+
+            to {
+                transform: scaleX(0);
+            }
         }
 
         /* --- SIDEBAR --- */
@@ -166,7 +239,12 @@
             transition: transform 0.3s ease;
         }
 
-        .brand h2 { color: var(--primary); font-size: 24px; font-weight: 700; text-align: center; }
+        .brand h2 {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+        }
 
         .nav-btn {
             display: flex;
@@ -184,7 +262,10 @@
             font-weight: 500;
         }
 
-        .nav-btn:hover { background-color: var(--bg-body); color: var(--primary); }
+        .nav-btn:hover {
+            background-color: var(--bg-body);
+            color: var(--primary);
+        }
 
         .nav-btn.active {
             background-color: var(--primary-light);
@@ -198,20 +279,55 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             z-index: 999;
         }
 
         /* --- MAIN CONTENT AREA --- */
-        .content { flex: 1; padding: 30px 40px; max-width: 1200px; margin: 0 auto; width: 100%; }
-        .view-section { display: none; animation: fadeIn 0.4s ease; }
-        .active-section { display: block; }
+        .content {
+            flex: 1;
+            padding: 30px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-        .mobile-header { display: none; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .menu-toggle { background: none; border: none; font-size: 24px; color: var(--primary); cursor: pointer; }
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
 
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        header h1 { font-size: 26px; color: var(--text-main); font-weight: 600; }
+        .active-section {
+            display: block;
+        }
+
+        .mobile-header {
+            display: none;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 26px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
 
         .total-badge {
             background: var(--primary-light);
@@ -223,9 +339,14 @@
         }
 
         /* --- INPUTS & BUTTONS --- */
-        .controls { display: flex; gap: 15px; margin-bottom: 25px; }
-        
-        input, select {
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        input,
+        select {
             padding: 12px 16px;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -235,7 +356,12 @@
             transition: border-color 0.3s;
             background: var(--surface);
         }
-        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
 
         .primary-btn {
             background-color: var(--primary);
@@ -248,75 +374,242 @@
             transition: all 0.3s;
             white-space: nowrap;
         }
-        .primary-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+        .primary-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
 
         /* --- TABLES --- */
-        .table-container { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow-x: auto; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background-color: #fdfcff; color: var(--text-muted); font-weight: 500; font-size: 14px; }
-        td { color: var(--text-main); font-weight: 500; }
+        .table-container {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th,
+        td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #fdfcff;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        td {
+            color: var(--text-main);
+            font-weight: 500;
+        }
 
         /* --- WIDER MODAL WINDOW FOR PERFECT VISIBILITY --- */
-/* --- WIDER MODAL WINDOW FOR PERFECT VISIBILITY --- */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; z-index: 2000; }
-        
+        /* --- WIDER MODAL WINDOW FOR PERFECT VISIBILITY --- */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
         .modal-content {
             background: var(--surface);
-            padding: 40px; /* Padding thodi badha di */
+            padding: 40px;
+            /* Padding thodi badha di */
             border-radius: var(--radius);
             width: 95%;
-            max-width: 1100px; /* 850px se 1100px kar diya for PC center view */
+            max-width: 1100px;
+            /* 850px se 1100px kar diya for PC center view */
             box-shadow: var(--shadow-lg);
-            max-height: 90vh; /* Height 85vh se 90vh kar di */
+            max-height: 90vh;
+            /* Height 85vh se 90vh kar di */
             overflow-y: auto;
             position: relative;
         }
-        
-        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 24px; color: var(--text-muted); cursor: pointer; background: none; border: none; }
-        .close-btn:hover { color: red; }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .close-btn:hover {
+            color: red;
+        }
 
         /* Detailed History Time Series Table Specific styles */
-        .inner-history-table th, .inner-history-table td { 
-            padding: 16px 18px; /* Cell spacing badha di */
-            font-size: 14px; /* Text thoda bada kar diya */
+        .inner-history-table th,
+        .inner-history-table td {
+            padding: 16px 18px;
+            /* Cell spacing badha di */
+            font-size: 14px;
+            /* Text thoda bada kar diya */
         }
-        .inner-history-table tbody tr { transition: background 0.2s; cursor: pointer; }
-        .inner-history-table tbody tr:hover { background-color: var(--primary-light); }
+
+        .inner-history-table tbody tr {
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .inner-history-table tbody tr:hover {
+            background-color: var(--primary-light);
+        }
 
         /* Form Grid Layout */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        .form-group { display: flex; flex-direction: column; gap: 5px; }
-        .form-group.full { grid-column: 1 / -1; }
-        .form-group label { font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
 
         /* Profile Detail View Split */
-        .profile-view { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .data-grid-view { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .data-row { display: flex; justify-content: space-between; padding: 12px; background: var(--bg-body); border-radius: 8px; border: 1px solid var(--border); align-items: center; }
-        .data-row span { color: var(--text-muted); font-size: 13px; font-weight: 600; }
-        .data-row strong { color: var(--primary); font-size: 14px; }
+        .profile-view {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .data-grid-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: var(--bg-body);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .data-row span {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .data-row strong {
+            color: var(--primary);
+            font-size: 14px;
+        }
 
         /* Detailed History Time Series Table Specific styles */
-        .inner-history-table th, .inner-history-table td { padding: 12px 14px; font-size: 13px; }
-        .inner-history-table tbody tr { transition: background 0.2s; cursor: pointer; }
-        .inner-history-table tbody tr:hover { background-color: var(--primary-light); }
+        .inner-history-table th,
+        .inner-history-table td {
+            padding: 12px 14px;
+            font-size: 13px;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .inner-history-table tbody tr {
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .inner-history-table tbody tr:hover {
+            background-color: var(--primary-light);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         @media (max-width: 768px) {
-            .mobile-header { display: flex; }
-            header h1 { font-size: 20px; }
-            .sidebar { position: fixed; left: 0; top: 0; height: 100vh; transform: translateX(-100%); width: 280px; box-shadow: var(--shadow-lg); }
-            .sidebar.open { transform: translateX(0); }
-            .mobile-overlay.active { display: block; }
-            .content { padding: 20px; }
-            .controls { flex-direction: column; }
-            .form-grid { grid-template-columns: 1fr; }
-            .data-grid-view { grid-template-columns: 1fr; }
+            .mobile-header {
+                display: flex;
+            }
+
+            header h1 {
+                font-size: 20px;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: var(--shadow-lg);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .mobile-overlay.active {
+                display: block;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-grid-view {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Toast Notification Container -->
@@ -330,14 +623,16 @@
                 <h2>ADMIN PORTAL</h2>
             </div>
             <nav>
-                <button onclick="switchTab('dashboard')" class="nav-btn active" id="nav-dashboard">Dashboard Hub</button>
+                <button onclick="switchTab('dashboard')" class="nav-btn active" id="nav-dashboard">Dashboard
+                    Hub</button>
                 <button onclick="switchTab('reports')" class="nav-btn" id="nav-reports">Employee Reports</button>
-                <button onclick="switchTab('ai-assistant')" class="nav-btn" id="nav-ai-assistant">🤖 AI Data Assistant</button>
+                <button onclick="switchTab('ai-assistant')" class="nav-btn" id="nav-ai-assistant">🤖 AI Data
+                    Assistant</button>
             </nav>
         </aside>
 
         <main class="content">
-            
+
             <div class="mobile-header">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
                 <h1 style="margin:0;">Menu</h1>
@@ -348,14 +643,19 @@
                     <h1>Dashboard Hub</h1>
                     <div class="total-badge">Total Employees: <span id="total-count">0</span></div>
                 </header>
-                
+
                 <div class="controls">
-                    <input type="text" id="dashboard-search" placeholder="🔍 Search employee by name to access work history..." onkeyup="searchFromDashboard()">
+                    <input type="text" id="dashboard-search"
+                        placeholder="🔍 Search employee by name to access work history..."
+                        onkeyup="searchFromDashboard()">
                     <button class="primary-btn" onclick="openFormModal()">+ Add New Employee Log</button>
                 </div>
 
-                <div id="dashboard-results-container" class="table-container" style="display: none; margin-bottom: 30px; border-color: var(--primary);">
-                    <div style="background: var(--primary-light); padding: 10px 20px; font-size: 13px; font-weight: 600; color: var(--primary);">SEARCH RESULTS DIRECTORY:</div>
+                <div id="dashboard-results-container" class="table-container"
+                    style="display: none; margin-bottom: 30px; border-color: var(--primary);">
+                    <div
+                        style="background: var(--primary-light); padding: 10px 20px; font-size: 13px; font-weight: 600; color: var(--primary);">
+                        SEARCH RESULTS DIRECTORY:</div>
                     <table>
                         <thead>
                             <tr style="background: #fdfcff;">
@@ -367,14 +667,18 @@
                         <tbody id="dashboard-search-list"></tbody>
                     </table>
                 </div>
-                
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border); box-shadow: var(--shadow-sm); text-align: center;">
-                    <h2 style="color: var(--primary); margin-bottom: 10px; font-weight: 600;">System Overview Workspace</h2>
-                    <p style="color: var(--text-muted); font-size: 14px; max-width: 450px;">Use the search engine bar above to lookup specific profile logs dynamically or visit the <strong>Employee Reports</strong> section for the complete un-filtered directory list.</p>
+
+                <div
+                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; background: var(--surface); border-radius: var(--radius); border: 1px dashed var(--border); box-shadow: var(--shadow-sm); text-align: center;">
+                    <h2 style="color: var(--primary); margin-bottom: 10px; font-weight: 600;">System Overview Workspace
+                    </h2>
+                    <p style="color: var(--text-muted); font-size: 14px; max-width: 450px;">Use the search engine bar
+                        above to lookup specific profile logs dynamically or visit the <strong>Employee Reports</strong>
+                        section for the complete un-filtered directory list.</p>
                 </div>
             </section>
 
-          <section id="reports" class="view-section">
+            <section id="reports" class="view-section">
                 <header>
                     <h1>Employee Directory Reports</h1>
                 </header>
@@ -397,28 +701,37 @@
             <section id="ai-assistant" class="view-section">
                 <header>
                     <h1>AI Data Assistant</h1>
-                    <div class="total-badge" style="background: #e0f2fe; color: #0284c7;">Status: Connected to Database</div>
+                    <div class="total-badge" style="background: #e0f2fe; color: #0284c7;">Status: Connected to Database
+                    </div>
                 </header>
 
-                <div style="display: flex; flex-direction: column; height: 65vh; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden;">
-                    
-                    <div id="dashboard-chat-messages" style="flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-body); font-size: 15px;">
-                        <div style="background: var(--primary-light); color: var(--primary); padding: 15px 20px; border-radius: 8px; align-self: flex-start; max-width: 85%; box-shadow: var(--shadow-sm);">
+                <div
+                    style="display: flex; flex-direction: column; height: 65vh; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden;">
+
+                    <div id="dashboard-chat-messages"
+                        style="flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: var(--bg-body); font-size: 15px;">
+                        <div
+                            style="background: var(--primary-light); color: var(--primary); padding: 15px 20px; border-radius: 8px; align-self: flex-start; max-width: 85%; box-shadow: var(--shadow-sm);">
                             <strong>Portal AI:</strong>
                         </div>
                     </div>
-                    
-                    <div style="padding: 20px; border-top: 1px solid var(--border); background: var(--surface); display: flex; gap: 15px; align-items: center;">
-                        <input type="text" id="dashboard-chat-input" placeholder="Ask anything (E.g., Who has the lowest overall percentage?)" style="flex: 1; padding: 14px 20px; border-radius: 30px; border: 1px solid var(--border); outline: none; font-size: 15px;">
-                        <button onclick="sendDashboardChatMessage()" class="primary-btn" style="border-radius: 30px; padding: 14px 30px; font-weight: 600;">Ask AI ➤</button>
+
+                    <div
+                        style="padding: 20px; border-top: 1px solid var(--border); background: var(--surface); display: flex; gap: 15px; align-items: center;">
+                        <input type="text" id="dashboard-chat-input"
+                            placeholder="Ask anything (E.g., Who has the lowest overall percentage?)"
+                            style="flex: 1; padding: 14px 20px; border-radius: 30px; border: 1px solid var(--border); outline: none; font-size: 15px;">
+                        <button onclick="sendDashboardChatMessage()" class="primary-btn"
+                            style="border-radius: 30px; padding: 14px 30px; font-weight: 600;">Ask AI ➤</button>
                     </div>
                 </div>
             </section>
-            </main> 
-            <div id="employee-modal" class="modal">
+        </main>
+        <div id="employee-modal" class="modal">
             <div class="modal-content">
                 <button class="close-btn" onclick="closeModal()">×</button>
-                <h2 id="modal-title" style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">System Actions</h2>
+                <h2 id="modal-title" style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">System
+                    Actions</h2>
 
                 <form id="employee-form" style="display: none;">
                     <input type="hidden" id="emp-id">
@@ -429,14 +742,19 @@
                             <input type="text" id="emp-name" required>
                         </div>
                         <div id="extra-log-fields" style="display: contents;">
-                            <div class="form-group"><label>Designation</label><input type="text" id="emp-designation"></div>
+                            <div class="form-group"><label>Designation</label><input type="text" id="emp-designation">
+                            </div>
                             <div class="form-group"><label>Match ID</label><input type="text" id="emp-matchId"></div>
                             <div class="form-group"><label>Date</label><input type="date" id="emp-date"></div>
-                            <div class="form-group"><label>Error Count</label><input type="number" id="emp-errorCount"></div>
+                            <div class="form-group"><label>Error Count</label><input type="number" id="emp-errorCount">
+                            </div>
                             <div class="form-group"><label>Behaviour</label><input type="text" id="emp-behaviour"></div>
                             <div class="form-group">
                                 <label>Late Mark?</label>
-                                <select id="emp-lateMark"><option value="No">No</option><option value="Yes">Yes</option></select>
+                                <select id="emp-lateMark">
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -444,27 +762,56 @@
                 </form>
 
                 <div id="history-view" class="profile-view" style="display: none; flex-direction: column; gap: 18px;">
-                    <div style="border-bottom: 2px solid var(--border); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
+                    <div
+                        style="border-bottom: 2px solid var(--border); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
                         <div>
-                            <h3 id="hist-emp-name" style="color: var(--primary); font-size: 22px; font-weight: 600;">-</h3>
-                            <p id="hist-emp-meta" style="font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">-</p>
+                            <h3 id="hist-emp-name" style="color: var(--primary); font-size: 22px; font-weight: 600;">-
+                            </h3>
+                            <p id="hist-emp-meta"
+                                style="font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">-
+                            </p>
                         </div>
                         <div style="display: flex; gap: 15px; margin-bottom: 5px;">
-                            <div style="background: #fee2e2; color: #b91c1c; padding: 8px 16px; border-radius: 8px; font-size: 14px;"><strong>Total Errors:</strong> <span id="hist-total-errors" style="font-size: 18px;">0</span></div>
-                            <div style="background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 8px; font-size: 14px;"><strong>PERCENTAGE:</strong> <span id="hist-overall-percentage" style="font-size: 18px;">100%</span></div>
+                            <div
+                                style="background: #fee2e2; color: #b91c1c; padding: 8px 16px; border-radius: 8px; font-size: 14px;">
+                                <strong>Total Errors:</strong> <span id="hist-total-errors"
+                                    style="font-size: 18px;">0</span>
+                            </div>
+                            <div
+                                style="background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 8px; font-size: 14px;">
+                                <strong>PERCENTAGE:</strong> <span id="hist-overall-percentage"
+                                    style="font-size: 18px;">100%</span>
+                            </div>
                         </div>
-                        <button class="primary-btn" id="modal-add-log-btn" style="background-color: #059669; font-size: 13px; padding: 10px 18px;">+ Add Today's Work Log</button>
+                        <button class="primary-btn" id="modal-add-log-btn"
+                            style="background-color: #059669; font-size: 13px; padding: 10px 18px;">+ Add Today's Work
+                            Log</button>
                     </div>
-                    <div style="display: flex; gap: 15px; align-items: center; justify-content: space-between; background: var(--primary-light); padding: 12px; border-radius: 8px;">
-                        <span style="font-size: 13px; font-weight: 700; color: var(--primary);">SECTION TIMEFRAME FILTER:</span>
-                        <select id="history-timeframe-select" onchange="filterEmployeeHistory()" style="padding: 8px 14px; font-size: 13px; width: auto; border-color: var(--primary);">
+                    <div
+                        style="display: flex; gap: 15px; align-items: center; justify-content: space-between; background: var(--primary-light); padding: 12px; border-radius: 8px;">
+                        <span style="font-size: 13px; font-weight: 700; color: var(--primary);">SECTION TIMEFRAME
+                            FILTER:</span>
+                        <select id="history-timeframe-select" onchange="filterEmployeeHistory()"
+                            style="padding: 8px 14px; font-size: 13px; width: auto; border-color: var(--primary);">
                             <option value="all">View All History Logs</option>
-                            <option value="day">Added Today</option><option value="week">Added This Week</option><option value="month">Added This Month</option><option value="year">Added This Year</option>
+                            <option value="day">Added Today</option>
+                            <option value="week">Added This Week</option>
+                            <option value="month">Added This Month</option>
+                            <option value="year">Added This Year</option>
                         </select>
                     </div>
-                    <div class="table-container" style="max-height: 500px; overflow-y: auto; border-color: var(--primary-light);">
+                    <div class="table-container"
+                        style="max-height: 500px; overflow-y: auto; border-color: var(--primary-light);">
                         <table class="inner-history-table" style="min-width: 100%;">
-                            <thead><tr style="background: #fdfcff; border-bottom: 2px solid var(--border);"><th>Logged Date</th><th>Match ID</th><th>Errors</th><th>Behaviour</th><th>Late Status</th></tr></thead>
+                            <thead>
+                                <tr style="background: #fdfcff; border-bottom: 2px solid var(--border);">
+                                    <th>Logged Date</th>
+                                    <th>Match ID</th>
+                                    <th>Errors</th>
+                                    <th>Behaviour</th>
+                                    <th>Late Status</th>
+                                </tr>
+                            </thead>
                             <tbody id="history-table-body"></tbody>
                         </table>
                     </div>
@@ -481,17 +828,20 @@
                         <div class="data-row"><span>Late Mark Flag</span><strong id="view-lateMark"></strong></div>
                     </div>
                     <div style="display: flex; gap: 12px; margin-top: 15px;">
-                        <button class="primary-btn" id="trigger-back-history-btn" style="background-color: var(--text-muted); flex: 1;">← Back to History Logs</button>
+                        <button class="primary-btn" id="trigger-back-history-btn"
+                            style="background-color: var(--text-muted); flex: 1;">← Back to History Logs</button>
                         <button class="primary-btn" id="trigger-edit-btn" style="flex: 1;">Edit Entry Settings</button>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
     <script>
-        const API_BASE_URL = 'http://localhost:3000/api/employees';
+        // Dynamic URL Resolution for both Local File execution and Vercel Deployment
+        const BACKEND_URL = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
+        const API_BASE_URL = BACKEND_URL + '/api/employees';
         let employees = [];
-        let currentHistoryName = ''; 
+        let currentHistoryName = '';
         let isFirstLoad = true;
 
         // --- TOAST NOTIFICATION SYSTEM ---
@@ -555,7 +905,7 @@
                 } else {
                     showToast('Connection Issue', 'Unable to fetch latest records from the server.', 'error', '🔌');
                 }
-            } catch (err) { 
+            } catch (err) {
                 console.error("Database connection check routine failure.", err);
                 showToast('System Error', "Database connection check routine failure.", 'error', '💥');
             }
@@ -564,28 +914,28 @@
         function switchTab(tabId) {
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active-section'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            
+
             document.getElementById(tabId).classList.add('active-section');
             document.getElementById(`nav-${tabId}`).classList.add('active');
-            
-            if(window.innerWidth <= 768) toggleSidebar(); 
-            
-            if(tabId === 'dashboard') {
+
+            if (window.innerWidth <= 768) toggleSidebar();
+
+            if (tabId === 'dashboard') {
                 document.getElementById('dashboard-search').value = '';
                 searchFromDashboard();
             }
         }
 
-       function openFormModal() {
+        function openFormModal() {
             document.getElementById('employee-modal').style.display = 'flex';
             document.getElementById('detail-view').style.display = 'none';
             document.getElementById('history-view').style.display = 'none';
             document.getElementById('employee-form').style.display = 'block';
-            
+
             // YAHAN SIRF NAME DIKHEGA
             document.getElementById('extra-log-fields').style.display = 'none';
             document.getElementById('form-mode-flag').value = 'new_profile';
-            
+
             document.getElementById('modal-title').innerText = 'Create Employee Profile';
             document.getElementById('employee-form').reset();
             document.getElementById('emp-id').value = '';
@@ -595,9 +945,9 @@
             const query = document.getElementById('dashboard-search').value.toLowerCase();
             const container = document.getElementById('dashboard-results-container');
             const searchList = document.getElementById('dashboard-search-list');
-            
+
             // Agar search bar khali hai toh results container ko chupa do (Rule Maintain)
-            if(!query) {
+            if (!query) {
                 container.style.display = 'none';
                 return;
             }
@@ -607,7 +957,7 @@
 
             searchList.innerHTML = '';
 
-            if(filteredNames.length === 0) {
+            if (filteredNames.length === 0) {
                 searchList.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-muted); padding: 15px;">No employee records match your search query.</td></tr>`;
             } else {
                 filteredNames.forEach(name => {
@@ -632,7 +982,7 @@
         function viewEmployeeDetails(name) {
             currentHistoryName = name;
             const userLogs = employees.filter(e => e.name === name);
-            if(userLogs.length === 0) return;
+            if (userLogs.length === 0) return;
 
             const latestLog = userLogs[userLogs.length - 1];
 
@@ -647,18 +997,18 @@
 
             document.getElementById('history-timeframe-select').value = 'all';
 
-document.getElementById('modal-add-log-btn').onclick = () => {
+            document.getElementById('modal-add-log-btn').onclick = () => {
                 document.getElementById('history-view').style.display = 'none';
                 document.getElementById('employee-form').style.display = 'block';
-                
+
                 // SABHI DETAILS SHOW HONGI
                 document.getElementById('extra-log-fields').style.display = 'contents';
                 document.getElementById('form-mode-flag').value = 'add_log';
-                
+
                 document.getElementById('modal-title').innerText = `Log Daily Work for ${name}`;
                 document.getElementById('employee-form').reset();
-                
-                document.getElementById('emp-id').value = ''; 
+
+                document.getElementById('emp-id').value = '';
                 document.getElementById('emp-name').value = name;
                 document.getElementById('emp-designation').value = latestLog.designation || '';
                 document.getElementById('emp-matchId').value = latestLog.matchId || '';
@@ -667,7 +1017,7 @@ document.getElementById('modal-add-log-btn').onclick = () => {
             filterEmployeeHistory();
         }
 
-// TIME-SERIES COMPILATION ASSIGNMENT ROUTINE 
+        // TIME-SERIES COMPILATION ASSIGNMENT ROUTINE 
         function filterEmployeeHistory() {
             const timeframe = document.getElementById('history-timeframe-select').value;
             const tableBody = document.getElementById('history-table-body');
@@ -697,7 +1047,7 @@ document.getElementById('modal-add-log-btn').onclick = () => {
             document.getElementById('hist-overall-percentage').innerText = calculatedPercentage + '%';
 
             // Agar logs empty hain toh "No log tracks found" dikhao
-            if(validLogs.length === 0) {
+            if (validLogs.length === 0) {
                 tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding:20px;">No log tracks found for this specific timeframe selection.</td></tr>`;
                 return;
             }
@@ -718,7 +1068,7 @@ document.getElementById('modal-add-log-btn').onclick = () => {
                 `;
             });
         }
-       function viewSingleDayLog(id) {
+        function viewSingleDayLog(id) {
             const emp = employees.find(e => e._id === id);
             if (!emp) return;
 
@@ -744,13 +1094,13 @@ document.getElementById('modal-add-log-btn').onclick = () => {
             document.getElementById('trigger-edit-btn').onclick = () => {
                 document.getElementById('detail-view').style.display = 'none';
                 document.getElementById('employee-form').style.display = 'block';
-                
+
                 // EDIT ME BHI DETAILS SHOW HONGI
                 document.getElementById('extra-log-fields').style.display = 'contents';
                 document.getElementById('form-mode-flag').value = 'edit_log';
-                
+
                 document.getElementById('modal-title').innerText = 'Edit System Log Document';
-                
+
                 document.getElementById('emp-id').value = emp._id;
                 document.getElementById('emp-name').value = emp.name;
                 document.getElementById('emp-designation').value = emp.designation;
@@ -762,7 +1112,7 @@ document.getElementById('modal-add-log-btn').onclick = () => {
             };
         }
 
- 
+
         function closeModal() {
             document.getElementById('employee-modal').style.display = 'none';
         }
@@ -783,27 +1133,27 @@ document.getElementById('modal-add-log-btn').onclick = () => {
             return true;
         }
 
-// LOAD DIRECTORY LIST DATA
+        // LOAD DIRECTORY LIST DATA
         async function loadData() {
             await fetchAllEmployees();
             const uniqueNames = [...new Set(employees.map(emp => emp.name))];
             document.getElementById('total-count').innerText = uniqueNames.length;
-            
+
             // Update complete directory table layout inside reports section
             const reportList = document.getElementById('report-list');
             reportList.innerHTML = '';
 
-            if(uniqueNames.length === 0) {
+            if (uniqueNames.length === 0) {
                 // Changed colspan to 5 kyunki ab 5 columns hain
                 reportList.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted); padding:20px;">No staff logs registered in database directory.</td></tr>`;
             } else {
                 uniqueNames.forEach(name => {
                     const userLogs = employees.filter(e => e.name === name);
                     const latestMeta = userLogs[userLogs.length - 1];
-                    
+
                     // --- NAYA CALCULATION LOGIC REPORT KE LIYE ---
                     const validLogs = userLogs.filter(log => log.date); // Sirf real logs count karo
-                    
+
                     let totalErrors = 0;
                     validLogs.forEach(log => {
                         totalErrors += (log.errorCount || 0);
@@ -835,15 +1185,15 @@ document.getElementById('modal-add-log-btn').onclick = () => {
             // Continuous execution check if user is already processing lookups
             searchFromDashboard();
         }
-document.getElementById('employee-form').addEventListener('submit', async (e) => {
+        document.getElementById('employee-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('emp-id').value;
             const mode = document.getElementById('form-mode-flag').value;
             const enteredName = document.getElementById('emp-name').value;
-            
+
             // Default payload jisme sirf Name hai
             let data = { name: enteredName };
-            
+
             // Agar Dashboard se profile nahi ban rahi, tab baaki data bhi payload mein bhejo
             if (mode !== 'new_profile') {
                 data = {
@@ -866,9 +1216,9 @@ document.getElementById('employee-form').addEventListener('submit', async (e) =>
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                if(response.ok) {
+                if (response.ok) {
                     await loadData(); // Database se updated list lao
-                    
+
                     if (mode === 'new_profile') {
                         showToast('Welcome Aboard!', `Profile for ${enteredName} has been created.`, 'success', '🎉');
                     } else if (mode === 'add_log') {
@@ -883,7 +1233,7 @@ document.getElementById('employee-form').addEventListener('submit', async (e) =>
                     currentHistoryName = enteredName;
                     document.getElementById('employee-form').style.display = 'none';
                     viewEmployeeDetails(currentHistoryName);
-                    
+
                 } else {
                     showToast('Error', "Operation server database error routing response.", 'error', '⚠️');
                 }
@@ -892,13 +1242,13 @@ document.getElementById('employee-form').addEventListener('submit', async (e) =>
             }
         });
         // --- AI CHATBOT LOGIC ---
-async function sendDashboardChatMessage() {
+        async function sendDashboardChatMessage() {
             const inputField = document.getElementById('dashboard-chat-input');
             const message = inputField.value.trim();
             if (!message) return;
 
             const chatMessages = document.getElementById('dashboard-chat-messages');
-            
+
             // 1. User ka message screen pe daalo
             chatMessages.innerHTML += `
                 <div style="background: var(--primary); color: white; padding: 15px 20px; border-radius: 8px; align-self: flex-end; max-width: 85%; box-shadow: var(--shadow-sm);">
@@ -919,19 +1269,19 @@ async function sendDashboardChatMessage() {
 
             try {
                 // 3. Backend Server se AI response mango
-                const response = await fetch('http://localhost:3000/api/chat', {
+                const response = await fetch(BACKEND_URL + '/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: message })
                 });
-                
+
                 const data = await response.json();
-                
+
                 // 4. SAFELY Loading tag hatao (Yeh step pehle crash kar raha tha)
                 const loader = document.getElementById(loadingId);
                 if (loader) loader.remove();
-                
-                if(data.reply) {
+
+                if (data.reply) {
                     showToast('Analysis Complete', 'AI has generated a response.', 'success', '🤖');
                     // AI ka proper response dikhao
                     chatMessages.innerHTML += `
@@ -946,8 +1296,8 @@ async function sendDashboardChatMessage() {
             } catch (err) {
                 // 5. SAFELY Catch Errors
                 const loader = document.getElementById(loadingId);
-                if (loader) loader.remove(); 
-                
+                if (loader) loader.remove();
+
                 showToast('AI Assistant Error', err.message, 'error', '🧠');
             }
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -960,4 +1310,5 @@ async function sendDashboardChatMessage() {
         window.onload = loadData;
     </script>
 </body>
+
 </html>
