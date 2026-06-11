@@ -9,11 +9,16 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Connect to MongoDB Atlas cluster pipeline
+// Serverless-Optimized MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://kunal:KdVygwFo0Anau8uX@hitesh.cqczgkd.mongodb.net/employeeDB';
-mongoose.connect(MONGODB_URI)
+if (mongoose.connection.readyState === 0) {
+    mongoose.connect(MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+    })
     .then(() => console.log("Cloud MongoDB Connected Successfully"))
-    .catch(err => console.error("Database connection failure context: ", err));
+    .catch(err => console.error("Database connection failure: ", err));
+}
 
 // Employee Schema
 const employeeSchema = new mongoose.Schema({

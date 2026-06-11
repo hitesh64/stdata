@@ -864,9 +864,9 @@
         </div>
     </div>
     <script>
-        // Dynamic URL Resolution for Local File, VS Code Live Server, and Vercel Deployment
-        const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-        const BACKEND_URL = isLocalHost ? 'http://localhost:3000' : '';
+        // Dynamic URL Resolution for Local File, VS Code Live Server, LAN IP, and Vercel Deployment
+        const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.protocol === 'file:';
+        const BACKEND_URL = isLocalHost ? `http://${window.location.hostname || 'localhost'}:3000` : '';
         const API_BASE_URL = BACKEND_URL + '/api/employees';
         let employees = [];
         let currentHistoryName = '';
