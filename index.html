@@ -258,13 +258,18 @@
             color: var(--text-muted);
             cursor: pointer;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            transition: all 0.1s;
             font-weight: 500;
+            touch-action: manipulation;
         }
 
         .nav-btn:hover {
             background-color: var(--bg-body);
             color: var(--primary);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.98);
         }
 
         .nav-btn.active {
@@ -371,14 +376,20 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: all 0.1s;
             white-space: nowrap;
+            touch-action: manipulation;
         }
 
         .primary-btn:hover {
             background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .primary-btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
         }
 
         /* --- TABLES --- */
@@ -626,6 +637,8 @@
                 <button onclick="switchTab('dashboard')" class="nav-btn active" id="nav-dashboard">Dashboard
                     Hub</button>
                 <button onclick="switchTab('reports')" class="nav-btn" id="nav-reports">Employee Reports</button>
+                <button onclick="switchTab('attendance')" class="nav-btn" id="nav-attendance">📅 Attendance
+                    Sheet</button>
                 <button onclick="switchTab('ai-assistant')" class="nav-btn" id="nav-ai-assistant">🤖 AI Data
                     Assistant</button>
             </nav>
@@ -641,7 +654,11 @@
             <section id="dashboard" class="view-section active-section">
                 <header>
                     <h1>Dashboard Hub</h1>
-                    <div class="total-badge">Total Employees: <span id="total-count">0</span></div>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="total-badge">Total Employees: <span id="total-count">0</span></div>
+                        <div class="total-badge" style="background: #fee2e2; color: #b91c1c;">Left Employees: <span
+                                id="left-count">0</span></div>
+                    </div>
                 </header>
 
                 <div class="controls">
@@ -689,11 +706,47 @@
                                 <th>Employee Name</th>
                                 <th>Designation</th>
                                 <th>Total Errors</th>
-                                <th>PERCENTAGE:</th>
+                                <th>PERCENTAGE ERROR:</th>
+                                <th>BEHAVIOUR %</th>
                                 <th style="text-align: right;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="report-list"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="attendance" class="view-section">
+                <header>
+                    <h1>Employee Attendance Sheet</h1>
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <span style="font-size: 13px; font-weight: 700; color: var(--primary);">TIMEFRAME:</span>
+                        <select id="attendance-timeframe" onchange="renderAttendanceSheet()"
+                            style="width: auto; padding: 8px 12px;">
+                            <option value="all">All Time Records</option>
+                            <option value="day">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                </header>
+                <div class="table-container">
+                    <table id="attendance-table">
+                        <thead>
+                            <tr style="background: #fdfcff;">
+                                <th>Employee Name</th>
+                                <th>Designation</th>
+                                <th style="text-align: center;">Logs</th>
+                                <th style="text-align: center; color: #10b981;">Present (P)</th>
+                                <th style="text-align: center; color: #ef4444;">Absent (A)</th>
+                                <th style="text-align: center; color: #f59e0b;">Unpaid Leave (UL)</th>
+                                <th style="text-align: center; color: #3b82f6;">Half Day (HD)</th>
+                                <th style="text-align: center; color: #8b5cf6;">Paid Leave (PL)</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-list"></tbody>
                     </table>
                 </div>
             </section>
@@ -727,6 +780,36 @@
                 </div>
             </section>
         </main>
+        
+        <!-- ATTENDANCE SPECIFIC MODAL -->
+        <div id="attendance-modal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <button class="close-btn" onclick="closeAttendanceModal()">×</button>
+                <h2 style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">Detailed Attendance Records</h2>
+                
+                <div style="display: flex; gap: 15px; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 15px;">
+                    <img id="att-modal-image" src="" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: none;">
+                    <div>
+                        <h3 id="att-modal-name" style="color: var(--primary); font-size: 20px; font-weight: 600;">-</h3>
+                        <p id="att-modal-meta" style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">-</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; align-items: center; justify-content: space-between; background: var(--primary-light); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <span style="font-size: 13px; font-weight: 700; color: var(--primary);">TIMEFRAME FILTER:</span>
+                    <select id="att-timeframe-select" onchange="filterAttendanceOnlyHistory()" style="padding: 8px 14px; font-size: 13px; width: auto; border-color: var(--primary);">
+                        <option value="all">All Time</option>
+                        <option value="day">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                    </select>
+                </div>
+
+                <div id="att-modal-timeline" style="display: flex; gap: 8px; flex-wrap: wrap; padding: 15px; background: #fdfcff; border-radius: 8px; border: 1px dashed var(--border); min-height: 100px;"></div>
+            </div>
+        </div>
+
         <div id="employee-modal" class="modal">
             <div class="modal-content">
                 <button class="close-btn" onclick="closeModal()">×</button>
@@ -741,34 +824,93 @@
                             <label>Employee Name</label>
                             <input type="text" id="emp-name" required>
                         </div>
+                        <div class="form-group">
+                            <label>Mobile No</label>
+                            <input type="text" id="emp-mobile">
+                        </div>
+                        <div class="form-group">
+                            <label>Email ID</label>
+                            <input type="email" id="emp-email">
+                        </div>
+                        <div class="form-group full">
+                            <label>Address</label>
+                            <input type="text" id="emp-address">
+                        </div>
+                        <div class="form-group full">
+                            <label>Upload Profile Image</label>
+                            <input type="file" id="emp-image" accept="image/*">
+                            <input type="hidden" id="emp-image-base64">
+                        </div>
                         <div id="extra-log-fields" style="display: contents;">
-                            <div class="form-group"><label>Designation</label><input type="text" id="emp-designation"></div>
+                            <div class="form-group"><label>Designation</label>
+                                <select id="emp-designation">
+                                    <option value="">Select Designation</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Team Lead">Team Lead</option>
+                                    <option value="A. Team Lead">A. Team Lead</option>
+                                    <option value="QC Analyst">QC Analyst</option>
+                                    <option value="Analyst">Analyst</option>
+                                    <option value="Doubt Solver">Doubt Solver</option>
+                                </select>
+                            </div>
                             <div class="form-group"><label>Date</label><input type="date" id="emp-date"></div>
-                            
+
                             <!-- 4 MATCH ID & ERROR COUNT SLOTS -->
-                            <div style="grid-column: 1 / -1; padding: 10px; background: #e0e7ff; border-radius: 8px; border: 1px dashed #6366f1; margin-top: 10px; margin-bottom: 5px;"><strong style="font-size: 13px; color: #4338ca;">Match Logs Entry (Optional up to 4)</strong></div>
-                            
+                            <div
+                                style="grid-column: 1 / -1; padding: 10px; background: #e0e7ff; border-radius: 8px; border: 1px dashed #6366f1; margin-top: 10px; margin-bottom: 5px;">
+                                <strong style="font-size: 13px; color: #4338ca;">Match Logs Entry (Optional up to
+                                    4)</strong>
+                            </div>
+
                             <div class="form-group"><label>Match ID 1</label><input type="text" id="emp-matchId1"></div>
-                            <div class="form-group"><label>Error Count 1</label><input type="number" id="emp-errorCount1" placeholder="0"></div>
-                            
+                            <div class="form-group"><label>Error Count 1</label><input type="number"
+                                    id="emp-errorCount1" placeholder="0"></div>
+
                             <div class="form-group"><label>Match ID 2</label><input type="text" id="emp-matchId2"></div>
-                            <div class="form-group"><label>Error Count 2</label><input type="number" id="emp-errorCount2" placeholder="0"></div>
-                            
+                            <div class="form-group"><label>Error Count 2</label><input type="number"
+                                    id="emp-errorCount2" placeholder="0"></div>
+
                             <div class="form-group"><label>Match ID 3</label><input type="text" id="emp-matchId3"></div>
-                            <div class="form-group"><label>Error Count 3</label><input type="number" id="emp-errorCount3" placeholder="0"></div>
-                            
+                            <div class="form-group"><label>Error Count 3</label><input type="number"
+                                    id="emp-errorCount3" placeholder="0"></div>
+
                             <div class="form-group"><label>Match ID 4</label><input type="text" id="emp-matchId4"></div>
-                            <div class="form-group"><label>Error Count 4</label><input type="number" id="emp-errorCount4" placeholder="0"></div>
+                            <div class="form-group"><label>Error Count 4</label><input type="number"
+                                    id="emp-errorCount4" placeholder="0"></div>
 
                             <div style="grid-column: 1 / -1; margin-top: 10px;"></div>
-                            
-                            <div class="form-group"><label>Behaviour</label><input type="text" id="emp-behaviour"></div>
+
+                            <div class="form-group"><label>Behaviour</label>
+                                <select id="emp-behaviour">
+                                    <option value="">Select Behaviour</option>
+                                    <option value="Excellent">Excellent</option>
+                                    <option value="Very Good">Very Good</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Bad">Bad</option>
+                                    <option value="Very bad">Very bad</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Attendance</label>
+                                <select id="emp-attendance">
+                                    <option value="">Select Status</option>
+                                    <option value="P">P (Present)</option>
+                                    <option value="A">A (Absent)</option>
+                                    <option value="UL">UL (Unpaid Leave)</option>
+                                    <option value="HD">HD (Half Day)</option>
+                                    <option value="PL">PL (Paid Leave)</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label>Late Mark?</label>
                                 <select id="emp-lateMark">
                                     <option value="No">No</option>
                                     <option value="Yes">Yes</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Late Time</label>
+                                <input type="time" id="emp-lateTime">
                             </div>
                         </div>
                     </div>
@@ -778,12 +920,18 @@
                 <div id="history-view" class="profile-view" style="display: none; flex-direction: column; gap: 18px;">
                     <div
                         style="border-bottom: 2px solid var(--border); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
-                        <div>
-                            <h3 id="hist-emp-name" style="color: var(--primary); font-size: 22px; font-weight: 600;">-
-                            </h3>
-                            <p id="hist-emp-meta"
-                                style="font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">-
-                            </p>
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <img id="hist-emp-image" src=""
+                                style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; display: none;">
+                            <div>
+                                <h3 id="hist-emp-name"
+                                    style="color: var(--primary); font-size: 22px; font-weight: 600;">-
+                                </h3>
+                                <p id="hist-emp-meta"
+                                    style="font-size: 14px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">
+                                    -
+                                </p>
+                            </div>
                         </div>
                         <div style="display: flex; gap: 15px; margin-bottom: 5px;">
                             <div
@@ -796,10 +944,24 @@
                                 <strong>PERCENTAGE:</strong> <span id="hist-overall-percentage"
                                     style="font-size: 18px;">100%</span>
                             </div>
+                            <div
+                                style="background: #e0e7ff; color: #4338ca; padding: 8px 16px; border-radius: 8px; font-size: 14px;">
+                                <strong>BEHAVIOUR %:</strong> <span id="hist-behaviour-percentage"
+                                    style="font-size: 18px;">100%</span>
+                            </div>
                         </div>
-                        <button class="primary-btn" id="modal-add-log-btn"
-                            style="background-color: #059669; font-size: 13px; padding: 10px 18px;">+ Add Today's Work
-                            Log</button>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="primary-btn" id="modal-delete-btn"
+                                style="background-color: #7f1d1d; font-size: 13px; padding: 10px 18px;"
+                                onclick="deleteEmployeeStatus()">Delete Employee</button>
+                            <button class="primary-btn" id="modal-mark-left-btn"
+                                style="background-color: #ef4444; font-size: 13px; padding: 10px 18px;"
+                                onclick="toggleLeftStatus()">Mark as Left</button>
+                            <button class="primary-btn" id="modal-add-log-btn"
+                                style="background-color: #059669; font-size: 13px; padding: 10px 18px;">+ Add Today's
+                                Work
+                                Log</button>
+                        </div>
                     </div>
                     <div
                         style="display: flex; gap: 15px; align-items: center; justify-content: space-between; background: var(--primary-light); padding: 12px; border-radius: 8px;">
@@ -823,6 +985,7 @@
                                     <th>Match ID</th>
                                     <th>Errors</th>
                                     <th>Behaviour</th>
+                                    <th>Attendance</th>
                                     <th>Late Status</th>
                                 </tr>
                             </thead>
@@ -833,25 +996,54 @@
 
                 <div id="detail-view" class="profile-view" style="display: none;">
                     <div class="data-grid-view">
-                        <div class="data-row"><span>Full Name</span><strong id="view-name" style="color:var(--text-main);"></strong></div>
-                        <div class="data-row"><span>Designation</span><strong id="view-designation" style="color:var(--text-main);"></strong></div>
-                        <div class="data-row" style="grid-column: 1 / -1; justify-content: space-between; border-bottom: 1px dashed var(--border);"><span>Date Logged</span><strong id="view-date"></strong></div>
-                        
-                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 1</span><strong id="view-matchId1" style="color:#4338ca;"></strong></div>
-                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 1</span><strong id="view-errorCount1" style="color:#b91c1c;"></strong></div>
-                        
-                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 2</span><strong id="view-matchId2" style="color:#4338ca;"></strong></div>
-                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 2</span><strong id="view-errorCount2" style="color:#b91c1c;"></strong></div>
-                        
-                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 3</span><strong id="view-matchId3" style="color:#4338ca;"></strong></div>
-                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 3</span><strong id="view-errorCount3" style="color:#b91c1c;"></strong></div>
-                        
-                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID 4</span><strong id="view-matchId4" style="color:#4338ca;"></strong></div>
-                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors 4</span><strong id="view-errorCount4" style="color:#b91c1c;"></strong></div>
+                        <div class="data-row full"
+                            style="grid-column: 1 / -1; justify-content: center; background: none; border: none;">
+                            <img id="view-image" src=""
+                                style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: none;">
+                        </div>
+                        <div class="data-row"><span>Full Name</span><strong id="view-name"
+                                style="color:var(--text-main);"></strong></div>
+                        <div class="data-row"><span>Mobile No</span><strong id="view-mobile"
+                                style="color:var(--text-main);"></strong></div>
+                        <div class="data-row"><span>Email ID</span><strong id="view-email"
+                                style="color:var(--text-main);"></strong></div>
+                        <div class="data-row"><span>Designation</span><strong id="view-designation"
+                                style="color:var(--text-main);"></strong></div>
+                        <div class="data-row" style="grid-column: 1 / -1;"><span>Address</span><strong id="view-address"
+                                style="color:var(--text-main);"></strong></div>
+                        <div class="data-row"
+                            style="grid-column: 1 / -1; justify-content: space-between; border-bottom: 1px dashed var(--border);">
+                            <span>Date Logged</span><strong id="view-date"></strong>
+                        </div>
 
-                        <div class="data-row" style="grid-column: 1 / -1; justify-content: center; background: #fff1f2; border: 2px dashed #f43f5e;"><span>Total Daily Errors For This Log:</span><strong id="view-errorCount" style="margin-left: 10px; font-size: 16px; color: #e11d48;"></strong></div>
-                        
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID
+                                1</span><strong id="view-matchId1" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors
+                                1</span><strong id="view-errorCount1" style="color:#b91c1c;"></strong></div>
+
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID
+                                2</span><strong id="view-matchId2" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors
+                                2</span><strong id="view-errorCount2" style="color:#b91c1c;"></strong></div>
+
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID
+                                3</span><strong id="view-matchId3" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors
+                                3</span><strong id="view-errorCount3" style="color:#b91c1c;"></strong></div>
+
+                        <div class="data-row" style="background: #e0e7ff; border-color: #c7d2fe;"><span>Match ID
+                                4</span><strong id="view-matchId4" style="color:#4338ca;"></strong></div>
+                        <div class="data-row" style="background: #fee2e2; border-color: #fecaca;"><span>Errors
+                                4</span><strong id="view-errorCount4" style="color:#b91c1c;"></strong></div>
+
+                        <div class="data-row"
+                            style="grid-column: 1 / -1; justify-content: center; background: #fff1f2; border: 2px dashed #f43f5e;">
+                            <span>Total Daily Errors For This Log:</span><strong id="view-errorCount"
+                                style="margin-left: 10px; font-size: 16px; color: #e11d48;"></strong>
+                        </div>
+
                         <div class="data-row"><span>Behaviour</span><strong id="view-behaviour"></strong></div>
+                        <div class="data-row"><span>Attendance</span><strong id="view-attendance"></strong></div>
                         <div class="data-row"><span>Late Mark Flag</span><strong id="view-lateMark"></strong></div>
                     </div>
                     <div style="display: flex; gap: 12px; margin-top: 15px;">
@@ -870,7 +1062,65 @@
         const API_BASE_URL = BACKEND_URL + '/api/employees';
         let employees = [];
         let currentHistoryName = '';
+        let currentAttendanceName = '';
         let isFirstLoad = true;
+
+        // --- NEW ISOLATED ATTENDANCE MODAL LOGIC ---
+        function viewAttendanceDetails(name) {
+            currentAttendanceName = name;
+            const userLogs = employees.filter(e => e.name === name);
+            if (userLogs.length === 0) return;
+
+            const latestLog = userLogs[userLogs.length - 1];
+
+            document.getElementById('attendance-modal').style.display = 'flex';
+            document.getElementById('att-modal-name').innerText = name;
+            document.getElementById('att-modal-meta').innerText = `Designation: ${latestLog.designation || 'Staff'} | Mobile: ${latestLog.mobile || '-'}`;
+            
+            if (latestLog.image) {
+                document.getElementById('att-modal-image').src = latestLog.image;
+                document.getElementById('att-modal-image').style.display = 'block';
+            } else {
+                document.getElementById('att-modal-image').style.display = 'none';
+            }
+
+            // Sync timeframe with current sheet
+            document.getElementById('att-timeframe-select').value = document.getElementById('attendance-timeframe').value;
+            filterAttendanceOnlyHistory();
+        }
+
+        function filterAttendanceOnlyHistory() {
+            const timeframe = document.getElementById('att-timeframe-select').value;
+            const timelineContainer = document.getElementById('att-modal-timeline');
+            timelineContainer.innerHTML = '';
+
+            let matchLogs = employees.filter(emp => emp.name === currentAttendanceName && checkTimeframe(emp.date, timeframe));
+            const validLogs = matchLogs.filter(log => log.date && log.attendance);
+
+            if (validLogs.length > 0) {
+                let timelineHTML = '';
+                let sortedLogs = [...validLogs].sort((x, y) => new Date(y.date) - new Date(x.date));
+                
+                sortedLogs.forEach(log => {
+                    let color = '#64748b', bg = '#f1f5f9';
+                    if (log.attendance === 'P') { color = '#059669'; bg = '#d1fae5'; }
+                    else if (log.attendance === 'A') { color = '#dc2626'; bg = '#fee2e2'; }
+                    else if (log.attendance === 'UL') { color = '#d97706'; bg = '#fef3c7'; }
+                    else if (log.attendance === 'HD') { color = '#2563eb'; bg = '#dbeafe'; }
+                    else if (log.attendance === 'PL') { color = '#7c3aed'; bg = '#ede9fe'; }
+
+                    const fullDate = new Date(log.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+                    timelineHTML += `<span style="background: ${bg}; color: ${color}; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; border: 1px solid ${color}40;" title="${log.attendance} on ${log.date}">${log.attendance} - ${fullDate}</span>`;
+                });
+                timelineContainer.innerHTML = timelineHTML;
+            } else {
+                timelineContainer.innerHTML = `<span style="color: var(--text-muted); font-size: 14px; width: 100%; text-align: center; padding: 20px;">No attendance records found for this timeframe.</span>`;
+            }
+        }
+
+        function closeAttendanceModal() {
+            document.getElementById('attendance-modal').style.display = 'none';
+        }
 
         // --- TOAST NOTIFICATION SYSTEM ---
         function showToast(title, message, type = 'info', customIcon = null) {
@@ -966,6 +1216,7 @@
 
             document.getElementById('modal-title').innerText = 'Create Employee Profile';
             document.getElementById('employee-form').reset();
+            document.getElementById('emp-image-base64').value = '';
             document.getElementById('emp-id').value = '';
         }
         // ACCURATE ON-DEMAND DASHBOARD SEARCH CORE ENGINE
@@ -992,12 +1243,13 @@
                     const userLogs = employees.filter(e => e.name === name);
                     const latestMeta = userLogs[userLogs.length - 1];
 
+                    const isLeft = latestMeta.status === 'Left';
                     searchList.innerHTML += `
-                        <tr>
-                            <td><strong>${name}</strong></td>
-                            <td><span style="color: var(--text-muted); font-size:14px;">${latestMeta.designation || 'Staff'}</span></td>
+                        <tr style="${isLeft ? 'background-color: #fee2e2;' : ''}">
+                            <td><strong style="${isLeft ? 'color: #b91c1c;' : ''}">${name} ${isLeft ? '(Left)' : ''}</strong></td>
+                            <td><span style="color: ${isLeft ? '#b91c1c' : 'var(--text-muted)'}; font-size:14px;">${latestMeta.designation || 'Staff'}</span></td>
                             <td style="text-align: right;">
-                                <button class="primary-btn" onclick="viewEmployeeDetails('${name}')" style="padding: 8px 16px; font-size: 13px;">View Work Data</button>
+                                <button class="primary-btn" onclick="viewEmployeeDetails('${name}')" style="padding: 8px 16px; font-size: 13px; ${isLeft ? 'background-color: #b91c1c;' : ''}">View Work Data</button>
                             </td>
                         </tr>
                     `;
@@ -1021,7 +1273,20 @@
             document.getElementById('modal-title').innerText = 'Work History Tracking Records';
 
             document.getElementById('hist-emp-name').innerText = name;
-            document.getElementById('hist-emp-meta').innerText = `Designation: ${latestLog.designation || 'Staff'}`;
+            document.getElementById('hist-emp-meta').innerText = `Designation: ${latestLog.designation || 'Staff'} | Mobile: ${latestLog.mobile || '-'}`;
+            if (latestLog.image) {
+                document.getElementById('hist-emp-image').src = latestLog.image;
+                document.getElementById('hist-emp-image').style.display = 'block';
+            } else {
+                document.getElementById('hist-emp-image').style.display = 'none';
+            }
+
+            const isLeft = latestLog.status === 'Left';
+            const leftBtn = document.getElementById('modal-mark-left-btn');
+            if (leftBtn) {
+                leftBtn.innerText = isLeft ? 'Restore Active Status' : 'Mark as Left';
+                leftBtn.style.backgroundColor = isLeft ? '#10b981' : '#ef4444';
+            }
 
             document.getElementById('history-timeframe-select').value = 'all';
 
@@ -1038,8 +1303,12 @@
 
                 document.getElementById('emp-id').value = '';
                 document.getElementById('emp-name').value = name;
+                document.getElementById('emp-mobile').value = latestLog.mobile || '';
+                document.getElementById('emp-email').value = latestLog.email || '';
+                document.getElementById('emp-address').value = latestLog.address || '';
+                document.getElementById('emp-image-base64').value = latestLog.image || '';
                 document.getElementById('emp-designation').value = latestLog.designation || '';
-                
+
                 // Clear all 4 match details for a fresh daily log
                 document.getElementById('emp-matchId1').value = '';
                 document.getElementById('emp-errorCount1').value = '';
@@ -1050,6 +1319,10 @@
                 document.getElementById('emp-matchId4').value = '';
                 document.getElementById('emp-errorCount4').value = '';
                 document.getElementById('emp-date').value = new Date().toISOString().split('T')[0];
+                document.getElementById('emp-lateTime').value = '';
+                document.getElementById('emp-behaviour').value = '';
+                document.getElementById('emp-attendance').value = '';
+                document.getElementById('emp-lateMark').value = 'No';
             };
             filterEmployeeHistory();
         }
@@ -1068,8 +1341,19 @@
 
             // Total Errors Calculate karo
             let totalErrors = 0;
+            let totalBehaviourScore = 0;
+            let validBehaviourLogs = 0;
+
             validLogs.forEach(log => {
                 totalErrors += (log.errorCount || 0);
+                if (log.behaviour) {
+                    validBehaviourLogs++;
+                    if (log.behaviour === 'Excellent') totalBehaviourScore += 100;
+                    else if (log.behaviour === 'Very Good') totalBehaviourScore += 80;
+                    else if (log.behaviour === 'Good') totalBehaviourScore += 60;
+                    else if (log.behaviour === 'Bad') totalBehaviourScore += 40;
+                    else if (log.behaviour === 'Very bad') totalBehaviourScore += 20;
+                }
             });
 
             // Top UI ko update karo
@@ -1082,6 +1366,12 @@
                 calculatedPercentage = Math.max(0, 100 - (totalErrors * penaltyPerError));
             }
             document.getElementById('hist-overall-percentage').innerText = calculatedPercentage + '%';
+
+            let behaviourPercentage = 0;
+            if (validBehaviourLogs > 0) {
+                behaviourPercentage = Math.round(totalBehaviourScore / validBehaviourLogs);
+            }
+            document.getElementById('hist-behaviour-percentage').innerText = behaviourPercentage + '%';
 
             // Agar logs empty hain toh "No log tracks found" dikhao
             if (validLogs.length === 0) {
@@ -1097,14 +1387,15 @@
                 // Combine all available match IDs into a single display string
                 const matchIdsArray = [log.matchId1, log.matchId2, log.matchId3, log.matchId4, log.matchId].filter(Boolean);
                 const displayMatchIds = matchIdsArray.length > 0 ? matchIdsArray.join(', ') : '-';
-                
+
                 tableBody.innerHTML += `
                     <tr onclick="viewSingleDayLog('${log._id}')">
                         <td><strong>${log.date || '-'}</strong></td>
                         <td><code style="background: var(--bg-body); padding:2px 6px; border-radius:4px; font-size:11px;">${displayMatchIds}</code></td>
                         <td style="color: ${log.errorCount > 0 ? '#b91c1c' : 'var(--text-main)'}; font-weight:500;">${log.errorCount || 0} Errors</td>
                         <td><span style="font-size:12px; color: var(--text-muted); font-weight:500;">${log.behaviour || '-'}</span></td>
-                        <td><span style="color: ${log.lateMark === 'Yes' ? 'red' : 'green'}; font-weight:600;">${log.lateMark || 'No'}</span></td>
+                        <td><span style="font-size:12px; font-weight:600; color:var(--primary);">${log.attendance || '-'}</span></td>
+                        <td><span style="color: ${log.lateMark === 'Yes' ? 'red' : 'green'}; font-weight:600;">${log.lateMark === 'Yes' && log.lateTime ? `Yes (${log.lateTime})` : (log.lateMark || 'No')}</span></td>
                         </tr>
                 `;
             });
@@ -1118,9 +1409,18 @@
             document.getElementById('modal-title').innerText = 'Detailed Log Analysis';
 
             document.getElementById('view-name').innerText = emp.name;
+            document.getElementById('view-mobile').innerText = emp.mobile || '-';
+            document.getElementById('view-email').innerText = emp.email || '-';
+            document.getElementById('view-address').innerText = emp.address || '-';
             document.getElementById('view-designation').innerText = emp.designation || '-';
+            if (emp.image) {
+                document.getElementById('view-image').src = emp.image;
+                document.getElementById('view-image').style.display = 'block';
+            } else {
+                document.getElementById('view-image').style.display = 'none';
+            }
             document.getElementById('view-date').innerText = emp.date || '-';
-            
+
             // Map the 4 dynamic match fields to the UI natively, defaulting to legacy log if applicable
             document.getElementById('view-matchId1').innerText = emp.matchId1 || emp.matchId || '-';
             document.getElementById('view-errorCount1').innerText = emp.errorCount1 || (emp.matchId ? emp.errorCount : '') || '0';
@@ -1130,12 +1430,13 @@
             document.getElementById('view-errorCount3').innerText = emp.errorCount3 || '0';
             document.getElementById('view-matchId4').innerText = emp.matchId4 || '-';
             document.getElementById('view-errorCount4').innerText = emp.errorCount4 || '0';
-            
+
             // Display mathematically calculated daily total
             document.getElementById('view-errorCount').innerText = emp.errorCount || '0';
-            
+
             document.getElementById('view-behaviour').innerText = emp.behaviour || '-';
-            document.getElementById('view-lateMark').innerText = emp.lateMark || 'No';
+            document.getElementById('view-attendance').innerText = emp.attendance || '-';
+            document.getElementById('view-lateMark').innerText = emp.lateMark === 'Yes' && emp.lateTime ? `Yes (${emp.lateTime})` : (emp.lateMark || 'No');
 
             document.getElementById('trigger-back-history-btn').onclick = () => {
                 document.getElementById('detail-view').style.display = 'none';
@@ -1155,9 +1456,13 @@
 
                 document.getElementById('emp-id').value = emp._id;
                 document.getElementById('emp-name').value = emp.name;
+                document.getElementById('emp-mobile').value = emp.mobile || '';
+                document.getElementById('emp-email').value = emp.email || '';
+                document.getElementById('emp-address').value = emp.address || '';
+                document.getElementById('emp-image-base64').value = emp.image || '';
                 document.getElementById('emp-designation').value = emp.designation || '';
                 document.getElementById('emp-date').value = emp.date || '';
-                
+
                 // Backfill legacy logs into Slot 1
                 document.getElementById('emp-matchId1').value = emp.matchId1 || emp.matchId || '';
                 document.getElementById('emp-errorCount1').value = emp.errorCount1 || (emp.matchId ? emp.errorCount : '') || '';
@@ -1167,15 +1472,68 @@
                 document.getElementById('emp-errorCount3').value = emp.errorCount3 || '';
                 document.getElementById('emp-matchId4').value = emp.matchId4 || '';
                 document.getElementById('emp-errorCount4').value = emp.errorCount4 || '';
-                
+
                 document.getElementById('emp-behaviour').value = emp.behaviour || '';
+                document.getElementById('emp-attendance').value = emp.attendance || '';
                 document.getElementById('emp-lateMark').value = emp.lateMark || 'No';
+                document.getElementById('emp-lateTime').value = emp.lateTime || '';
             };
         }
 
 
         function closeModal() {
             document.getElementById('employee-modal').style.display = 'none';
+        }
+
+        async function toggleLeftStatus() {
+            if (!currentHistoryName) return;
+            const userLogs = employees.filter(e => e.name === currentHistoryName);
+            const latestLog = userLogs[userLogs.length - 1];
+            const newStatus = latestLog.status === 'Left' ? 'Active' : 'Left';
+
+            if (!confirm(`Are you sure you want to change ${currentHistoryName}'s status to ${newStatus}?`)) return;
+
+            try {
+                const response = await fetch(BACKEND_URL + '/api/employees/status', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: currentHistoryName, status: newStatus })
+                });
+
+                if (response.ok) {
+                    showToast('Status Updated', `${currentHistoryName} is now marked as ${newStatus}.`, 'success');
+                    await loadData();
+                    viewEmployeeDetails(currentHistoryName); // Refresh modal
+                } else {
+                    showToast('Error', 'Failed to update status.', 'error');
+                }
+            } catch (err) {
+                showToast('Error', err.message, 'error');
+            }
+        }
+
+        async function deleteEmployeeStatus() {
+            if (!currentHistoryName) return;
+
+            if (!confirm(`CAUTION: Are you sure you want to PERMANENTLY delete ${currentHistoryName} and all their logs from the database? This action cannot be undone.`)) return;
+
+            try {
+                const response = await fetch(BACKEND_URL + '/api/employees/deleteByName', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: currentHistoryName })
+                });
+
+                if (response.ok) {
+                    showToast('Deleted', `${currentHistoryName} has been completely removed from the database.`, 'success');
+                    await loadData();
+                    closeModal(); // Close the modal since the employee no longer exists
+                } else {
+                    showToast('Error', 'Failed to delete employee.', 'error');
+                }
+            } catch (err) {
+                showToast('Error', err.message, 'error');
+            }
         }
 
         function checkTimeframe(dateString, frame) {
@@ -1200,6 +1558,8 @@
             const uniqueNames = [...new Set(employees.map(emp => emp.name))];
             document.getElementById('total-count').innerText = uniqueNames.length;
 
+            let leftCount = 0;
+
             // Update complete directory table layout inside reports section
             const reportList = document.getElementById('report-list');
             reportList.innerHTML = '';
@@ -1211,13 +1571,27 @@
                 uniqueNames.forEach(name => {
                     const userLogs = employees.filter(e => e.name === name);
                     const latestMeta = userLogs[userLogs.length - 1];
+                    const isLeft = latestMeta.status === 'Left';
+                    if (isLeft) leftCount++;
 
                     // --- NAYA CALCULATION LOGIC REPORT KE LIYE ---
                     const validLogs = userLogs.filter(log => log.date); // Sirf real logs count karo
 
                     let totalErrors = 0;
+                    let totalBehaviourScore = 0;
+                    let validBehaviourLogs = 0;
+
                     validLogs.forEach(log => {
                         totalErrors += (log.errorCount || 0);
+
+                        if (log.behaviour) {
+                            validBehaviourLogs++;
+                            if (log.behaviour === 'Excellent') totalBehaviourScore += 100;
+                            else if (log.behaviour === 'Very Good') totalBehaviourScore += 80;
+                            else if (log.behaviour === 'Good') totalBehaviourScore += 60;
+                            else if (log.behaviour === 'Bad') totalBehaviourScore += 40;
+                            else if (log.behaviour === 'Very bad') totalBehaviourScore += 20;
+                        }
                     });
 
                     let calculatedPercentage = 0;
@@ -1225,27 +1599,106 @@
                         let penaltyPerError = 2; // Same 2% deduction logic
                         calculatedPercentage = Math.max(0, 100 - (totalErrors * penaltyPerError));
                     }
+
+                    let behaviourPercentage = 0;
+                    if (validBehaviourLogs > 0) {
+                        behaviourPercentage = Math.round(totalBehaviourScore / validBehaviourLogs);
+                    }
                     // ---------------------------------------------
 
+                    const rowStyle = isLeft ? 'background-color: #fee2e2; color: #b91c1c;' : '';
+                    const textStyle = isLeft ? 'color: #b91c1c;' : 'color: var(--text-muted);';
+                    const mainTextStyle = isLeft ? 'color: #b91c1c;' : 'color: var(--text-main);';
+
                     reportList.innerHTML += `
-                        <tr>
-                            <td><strong>${name}</strong></td>
-                            <td><span style="color: var(--text-muted); font-size:14px;">${latestMeta.designation || 'Staff'}</span></td>
+                        <tr style="${rowStyle}">
+                            <td><strong style="${mainTextStyle}">${name} ${isLeft ? '(Left)' : ''}</strong></td>
+                            <td><span style="font-size:14px; ${textStyle}">${latestMeta.designation || 'Staff'}</span></td>
                             
-                            <td><span style="color: ${totalErrors > 0 ? '#b91c1c' : 'var(--text-main)'}; font-weight: 600;">${totalErrors}</span></td>
-                            <td><span style="background: ${calculatedPercentage < 50 ? '#fee2e2' : 'var(--primary-light)'}; color: ${calculatedPercentage < 50 ? '#b91c1c' : 'var(--primary)'}; padding: 4px 8px; border-radius: 6px; font-weight: 600; font-size: 13px;">${calculatedPercentage}%</span></td>
+                            <td><span style="font-weight: 600; ${mainTextStyle}">${totalErrors}</span></td>
+                            <td><span style="background: ${calculatedPercentage < 50 ? '#fca5a5' : (isLeft ? '#fca5a5' : 'var(--primary-light)')}; color: ${calculatedPercentage < 50 ? '#991b1b' : (isLeft ? '#991b1b' : 'var(--primary)')}; padding: 4px 8px; border-radius: 6px; font-weight: 600; font-size: 13px;">${calculatedPercentage}%</span></td>
                             
+                            <td><span style="background: ${behaviourPercentage < 50 ? '#fca5a5' : (isLeft ? '#fca5a5' : '#e0e7ff')}; color: ${behaviourPercentage < 50 ? '#991b1b' : (isLeft ? '#991b1b' : '#4338ca')}; padding: 4px 8px; border-radius: 6px; font-weight: 600; font-size: 13px;">${behaviourPercentage}%</span></td>
+
                             <td style="text-align: right;">
-                                <button class="primary-btn" onclick="viewEmployeeDetails('${name}')" style="padding: 8px 16px; font-size: 13px;">View Work Data</button>
+                                <button class="primary-btn" onclick="viewEmployeeDetails('${name}')" style="padding: 8px 16px; font-size: 13px; ${isLeft ? 'background-color: #b91c1c;' : ''}">View Work Data</button>
                             </td>
                         </tr>
                     `;
                 });
             }
 
+            if (document.getElementById('left-count')) {
+                document.getElementById('left-count').innerText = leftCount;
+            }
+
             // Continuous execution check if user is already processing lookups
             searchFromDashboard();
+            renderAttendanceSheet(); // Refresh attendance data table
         }
+
+        function renderAttendanceSheet() {
+            const timeframe = document.getElementById('attendance-timeframe').value;
+            const sheetList = document.getElementById('attendance-list');
+            if (!sheetList) return;
+
+            sheetList.innerHTML = '';
+
+            const uniqueNames = [...new Set(employees.map(emp => emp.name))];
+
+            if (uniqueNames.length === 0) {
+                sheetList.innerHTML = `<tr><td colspan="9" style="text-align:center; color: var(--text-muted); padding:20px;">No attendance records found.</td></tr>`;
+                return;
+            }
+
+            let renderedRows = 0;
+
+            uniqueNames.forEach(name => {
+                const userLogs = employees.filter(e => e.name === name);
+                const latestMeta = userLogs[userLogs.length - 1];
+
+                let p = 0, a = 0, ul = 0, hd = 0, pl = 0;
+                let validLogCount = 0;
+                let validLogsForTimeline = [];
+
+                userLogs.forEach(log => {
+                    if (log.date && checkTimeframe(log.date, timeframe)) {
+                        if (log.attendance) {
+                            validLogCount++;
+                            if (log.attendance === 'P') p++;
+                            else if (log.attendance === 'A') a++;
+                            else if (log.attendance === 'UL') ul++;
+                            else if (log.attendance === 'HD') hd++;
+                            else if (log.attendance === 'PL') pl++;
+                        }
+                    }
+                });
+
+                if (validLogCount > 0) {
+                    renderedRows++;
+                    sheetList.innerHTML += `
+                        <tr>
+                            <td><strong style="color: var(--text-main);">${name}</strong></td>
+                            <td><span style="font-size:14px; color:var(--text-muted);">${latestMeta.designation || 'Staff'}</span></td>
+                            <td style="text-align: center; font-weight: 600; color: var(--text-main);">${validLogCount}</td>
+                            <td style="text-align: center; color: #10b981; font-weight: bold; background: #ecfdf5;">${p}</td>
+                            <td style="text-align: center; color: #ef4444; font-weight: bold; background: #fef2f2;">${a}</td>
+                            <td style="text-align: center; color: #f59e0b; font-weight: bold; background: #fffbeb;">${ul}</td>
+                            <td style="text-align: center; color: #3b82f6; font-weight: bold; background: #eff6ff;">${hd}</td>
+                            <td style="text-align: center; color: #8b5cf6; font-weight: bold; background: #f5f3ff;">${pl}</td>
+                            <td style="text-align: right;">
+                                <button class="primary-btn" onclick="viewAttendanceDetails('${name}')" style="padding: 6px 14px; font-size: 12px; border-radius: 6px; background-color: var(--primary);">View Records</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+
+            if (renderedRows === 0) {
+                sheetList.innerHTML = `<tr><td colspan="9" style="text-align:center; color: var(--text-muted); padding:20px;">No active attendance records for the selected timeframe.</td></tr>`;
+            }
+        }
+
         document.getElementById('employee-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('emp-id').value;
@@ -1262,7 +1715,13 @@
             }
 
             // Default payload jisme sirf Name hai
-            let data = { name: enteredName };
+            let data = {
+                name: enteredName,
+                mobile: document.getElementById('emp-mobile').value,
+                email: document.getElementById('emp-email').value,
+                address: document.getElementById('emp-address').value,
+                image: document.getElementById('emp-image-base64').value
+            };
 
             // Agar Dashboard se profile nahi ban rahi, tab baaki data bhi payload mein bhejo
             if (mode !== 'new_profile') {
@@ -1271,12 +1730,16 @@
                 const ec3 = parseInt(document.getElementById('emp-errorCount3').value) || 0;
                 const ec4 = parseInt(document.getElementById('emp-errorCount4').value) || 0;
                 const totalDailyErrors = ec1 + ec2 + ec3 + ec4;
-                
+
                 data = {
                     name: enteredName,
+                    mobile: document.getElementById('emp-mobile').value,
+                    email: document.getElementById('emp-email').value,
+                    address: document.getElementById('emp-address').value,
+                    image: document.getElementById('emp-image-base64').value,
                     designation: document.getElementById('emp-designation').value,
                     date: document.getElementById('emp-date').value,
-                    
+
                     matchId1: document.getElementById('emp-matchId1').value,
                     errorCount1: ec1,
                     matchId2: document.getElementById('emp-matchId2').value,
@@ -1285,15 +1748,23 @@
                     errorCount3: ec3,
                     matchId4: document.getElementById('emp-matchId4').value,
                     errorCount4: ec4,
-                    
+
                     errorCount: totalDailyErrors, // This will be calculated natively into total errors!
                     behaviour: document.getElementById('emp-behaviour').value,
-                    lateMark: document.getElementById('emp-lateMark').value
+                    attendance: document.getElementById('emp-attendance').value,
+                    lateMark: document.getElementById('emp-lateMark').value,
+                    lateTime: document.getElementById('emp-lateTime').value
                 };
             }
 
             const method = id ? 'PUT' : 'POST';
             const url = id ? `${API_BASE_URL}/${id}` : API_BASE_URL;
+
+            const submitBtn = document.querySelector('#employee-form button[type="submit"]');
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = 'Saving...';
+            submitBtn.style.pointerEvents = 'none';
+            submitBtn.style.opacity = '0.7';
 
             try {
                 const response = await fetch(url, {
@@ -1302,7 +1773,12 @@
                     body: JSON.stringify(data)
                 });
                 if (response.ok) {
-                    await loadData(); // Database se updated list lao
+                    // Fetch accurate data from DB while button shows "Saving..."
+                    await loadData();
+
+                    // Now safely transition views
+                    currentHistoryName = enteredName;
+                    document.getElementById('employee-form').style.display = 'none';
 
                     if (mode === 'new_profile') {
                         showToast('Welcome Aboard!', `Profile for ${enteredName} has been created.`, 'success', '🎉');
@@ -1314,16 +1790,29 @@
                         showToast('Success', 'Operation completed successfully!', 'success');
                     }
 
-                    // NAYA LOGIC: Form chhupa kar direct History View pe auto-redirect karo!
-                    currentHistoryName = enteredName;
-                    document.getElementById('employee-form').style.display = 'none';
                     viewEmployeeDetails(currentHistoryName);
 
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.style.pointerEvents = 'auto';
+                    submitBtn.style.opacity = '1';
+
                 } else {
-                    showToast('Error', "Operation server database error routing response.", 'error', '⚠️');
+                    let errorMsg = "Operation server database error routing response.";
+                    try {
+                        const errObj = await response.json();
+                        if (errObj.error) errorMsg = errObj.error;
+                    } catch (e) { }
+                    showToast('Error', errorMsg, 'error', '⚠️');
+
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.style.pointerEvents = 'auto';
+                    submitBtn.style.opacity = '1';
                 }
             } catch (err) {
                 showToast('Critical Error', "Critical submission pipeline failure: " + err.message, 'error', '💥');
+                submitBtn.innerText = originalBtnText;
+                submitBtn.style.pointerEvents = 'auto';
+                submitBtn.style.opacity = '1';
             }
         });
         // --- AI CHATBOT LOGIC ---
@@ -1392,6 +1881,19 @@
         document.getElementById('dashboard-chat-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') sendDashboardChatMessage();
         });
+        document.getElementById('emp-image').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    document.getElementById('emp-image-base64').value = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('emp-image-base64').value = '';
+            }
+        });
+
         window.onload = loadData;
     </script>
 </body>

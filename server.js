@@ -7,7 +7,19 @@ const https = require('https');
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+
+// Global anti-crash error handler for body-parser payload limits
+app.use((err, req, res, next) => {
+    if (err.type === 'entity.too.large') {
+        return res.status(413).json({ error: 'Image file is too large! Please upload a file smaller than 50MB.' });
+    }
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        return res.status(400).json({ error: 'Invalid JSON payload received.' });
+    }
+    next(err);
+});
 
 // Serverless-Optimized MongoDB Connection Middleware
 let isConnected = false;
@@ -43,10 +55,14 @@ app.use(async (req, res, next) => {
 const employeeSchema = new mongoose.Schema({
     name: { type: String, required: true },
     designation: String,
-    
+    mobile: String,
+    email: String,
+    address: String,
+    image: String, // Store image as base64 or URL
+
     // Legacy support for single matchId
-    matchId: String, 
-    
+    matchId: String,
+
     // Expanded Match IDs & Error Counts
     matchId1: String,
     errorCount1: { type: Number, default: 0 },
@@ -61,8 +77,11 @@ const employeeSchema = new mongoose.Schema({
     errorCount: { type: Number, default: 0 }, // This acts as the DAILY total now
     behaviour: String,
     lateMark: String,
-    totalErrors: { type: Number, default: 0 },         
-    overallPercentage: { type: Number, default: 0 }    
+    lateTime: String,
+    attendance: String,
+    status: { type: String, default: 'Active' },
+    totalErrors: { type: Number, default: 0 },
+    overallPercentage: { type: Number, default: 0 }
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);
@@ -71,16 +90,16 @@ const Employee = mongoose.model('Employee', employeeSchema);
 async function syncEmployeeStats(empName) {
     try {
         const allLogs = await Employee.find({ name: empName });
-        const validLogs = allLogs.filter(log => log.date); 
-        
+        const validLogs = allLogs.filter(log => log.date);
+
         let total = 0;
         validLogs.forEach(log => { total += (log.errorCount || 0); });
-        
+
         let percentage = 0;
         if (validLogs.length > 0) { percentage = Math.max(0, 100 - (total * 2)); }
-        
+
         await Employee.updateMany(
-            { name: empName }, 
+            { name: empName },
             { $set: { totalErrors: total, overallPercentage: percentage } }
         );
     } catch (err) {
@@ -97,15 +116,31 @@ app.post('/api/employees', async (req, res) => {
     try {
         const newEmployee = new Employee(req.body);
         await newEmployee.save();
-        await syncEmployeeStats(req.body.name);
+        syncEmployeeStats(req.body.name); // Fire-and-forget background task
         res.status(201).json(newEmployee);
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.put('/api/employees/status', async (req, res) => {
+    try {
+        const { name, status } = req.body;
+        await Employee.updateMany({ name }, { $set: { status } });
+        res.json({ success: true, message: `Status updated to ${status}` });
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.delete('/api/employees/deleteByName', async (req, res) => {
+    try {
+        const { name } = req.body;
+        await Employee.deleteMany({ name });
+        res.json({ success: true, message: `All records for ${name} have been deleted.` });
     } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
 app.put('/api/employees/:id', async (req, res) => {
     try {
-        const updatedEmployee = await Employee.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        await syncEmployeeStats(updatedEmployee.name);
+        const updatedEmployee = await Employee.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
+        syncEmployeeStats(updatedEmployee.name); // Fire-and-forget background task
         res.json(updatedEmployee);
     } catch (err) { res.status(400).json({ error: err.message }); }
 });
@@ -121,10 +156,11 @@ app.get('/api/employees/search', async (req, res) => {
 // --- AI ASSISTANT CHATBOT ROUTE (GROQ ENGINE WITH DEDUPLICATION) ---
 app.post('/api/chat', async (req, res) => {
     const userMessage = req.body.message;
-    const apiKey = process.env.GROQ_API_KEY; 
+    const apiKey = process.env.GROQ_API_KEY;
 
     try {
-        const employees = await Employee.find();
+        // Exclude massive base64 image strings to prevent Groq API token limit crashes
+        const employees = await Employee.find().select('-image');
         const dbContext = JSON.stringify(employees);
 
         // STRICTURE SYSTEM PROMPT: Forces the AI to only return deduplicated unique names without extra explanation
