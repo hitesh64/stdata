@@ -84,7 +84,24 @@ const employeeSchema = new mongoose.Schema({
     overallPercentage: { type: Number, default: 0 }
 });
 
+// Indexes for fast querying and smooth loading
+employeeSchema.index({ name: 1 });
+employeeSchema.index({ date: -1 });
+
 const Employee = mongoose.model('Employee', employeeSchema);
+
+// Complaint Schema
+const complaintSchema = new mongoose.Schema({
+    empName: { type: String, required: true },
+    date: { type: String, required: true },
+    description: { type: String, required: true },
+    severity: { type: String, default: 'Medium' }, // Low, Medium, High
+    status: { type: String, default: 'Open' } // Open, Resolved
+});
+
+complaintSchema.index({ empName: 1 });
+
+const Complaint = mongoose.model('Complaint', complaintSchema);
 
 // Auto-Sync Function for 100% Database Accuracy
 async function syncEmployeeStats(empName) {
@@ -109,7 +126,21 @@ async function syncEmployeeStats(empName) {
 
 // API Endpoints REST Routing Configurations
 app.get('/api/employees', async (req, res) => {
-    try { res.json(await Employee.find()); } catch (err) { res.status(500).json({ error: err.message }); }
+    try { res.json(await Employee.find().select('-image')); } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/employees/imageByName/:name', async (req, res) => {
+    try {
+        const emp = await Employee.findOne({ name: req.params.name, image: { $exists: true, $ne: null, $ne: "" } }).sort({ _id: -1 }).select('image');
+        res.json({ image: emp ? emp.image : null });
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/employees/imageById/:id', async (req, res) => {
+    try {
+        const emp = await Employee.findById(req.params.id).select('image');
+        res.json({ image: emp ? emp.image : null });
+    } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.post('/api/employees', async (req, res) => {
@@ -139,9 +170,20 @@ app.delete('/api/employees/deleteByName', async (req, res) => {
 
 app.put('/api/employees/:id', async (req, res) => {
     try {
+        if (!req.body.image) delete req.body.image;
         const updatedEmployee = await Employee.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
         syncEmployeeStats(updatedEmployee.name); // Fire-and-forget background task
         res.json(updatedEmployee);
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.delete('/api/employees/:id', async (req, res) => {
+    try {
+        const deletedLog = await Employee.findByIdAndDelete(req.params.id);
+        if (deletedLog) {
+            syncEmployeeStats(deletedLog.name); // Fire-and-forget background task to update percentages
+        }
+        res.json({ success: true, message: `Work log deleted.` });
     } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
@@ -151,6 +193,36 @@ app.get('/api/employees/search', async (req, res) => {
         const employees = await Employee.find({ name: new RegExp(name, 'i') });
         res.json(employees);
     } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// --- COMPLAINTS API ROUTES ---
+app.get('/api/complaints', async (req, res) => {
+    try {
+        const complaints = await Complaint.find().sort({ _id: -1 });
+        res.json(complaints);
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/complaints', async (req, res) => {
+    try {
+        const newComplaint = new Complaint(req.body);
+        await newComplaint.save();
+        res.status(201).json(newComplaint);
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.put('/api/complaints/:id/resolve', async (req, res) => {
+    try {
+        const updatedComplaint = await Complaint.findByIdAndUpdate(req.params.id, { status: 'Resolved' }, { returnDocument: 'after' });
+        res.json(updatedComplaint);
+    } catch (err) { res.status(400).json({ error: err.message }); }
+});
+
+app.delete('/api/complaints/:id', async (req, res) => {
+    try {
+        await Complaint.findByIdAndDelete(req.params.id);
+        res.json({ success: true, message: 'Complaint deleted.' });
+    } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
 // --- AI ASSISTANT CHATBOT ROUTE (GROQ ENGINE WITH DEDUPLICATION) ---
@@ -163,8 +235,14 @@ app.post('/api/chat', async (req, res) => {
         const employees = await Employee.find().select('-image');
         const dbContext = JSON.stringify(employees);
 
-        // STRICTURE SYSTEM PROMPT: Forces the AI to only return deduplicated unique names without extra explanation
-        const systemPrompt = "You are an intelligent HR Assistant for an Employee Management Portal. When asked for a list of employees or names, you MUST return a clean list of unique, deduplicated names where each name appears exactly once. Do not repeat names or give explanatory notes about duplicates. Answer the user's question accurately based ONLY on the provided database context. Be helpful, professional, and concise.";
+        const systemPrompt = `You are an advanced HR Data Analyst Assistant for an Employee Management Portal. 
+The database contains daily logs for employees (each document represents a daily record, meaning employee names will repeat). 
+Your objective: Provide highly detailed, structured, and insightful answers based strictly on the provided database context.
+RULES:
+1. DEDUPLICATE & GROUP: When summarizing or listing employees, intelligently group the data by unique employee name. Never list the same name multiple times.
+2. COMPREHENSIVE DETAILS: When asked for details or records, provide brief but complete analytical breakdowns including designation, total errors, overall percentage, and recent behaviour/attendance.
+3. FORMATTING: Format your responses beautifully using Markdown (bullet points, bold text, short paragraphs) for maximum readability.
+4. Be professional, highly analytical, and concise.`;
 
         const requestBody = JSON.stringify({
             model: "llama-3.3-70b-versatile",
