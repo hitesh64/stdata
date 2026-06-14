@@ -131,7 +131,7 @@ app.get('/api/employees', async (req, res) => {
 
 app.get('/api/employees/imageByName/:name', async (req, res) => {
     try {
-        const emp = await Employee.findOne({ name: req.params.name, image: { $exists: true, $ne: null, $ne: "" } }).sort({ _id: -1 }).select('image');
+        const emp = await Employee.findOne({ name: req.params.name, image: { $exists: true, $nin: [null, ""] } }).sort({ _id: -1 }).select('image');
         res.json({ image: emp ? emp.image : null });
     } catch (err) { res.status(500).json({ error: err.message }); }
 });

@@ -226,14 +226,35 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7);
+            }
+
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+            }
         }
 
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         /* --- SIDEBAR --- */
@@ -770,51 +791,71 @@
             </section>
 
             <section id="ai-assistant" class="view-section">
-                <header style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <header
+                    style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">
+                        <div
+                            style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">
                             ✨
                         </div>
                         <div>
-                            <h1 style="margin: 0; font-size: 24px; background: linear-gradient(135deg, #4f46e5, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Portal Intelligence</h1>
-                            <p style="margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 500;">Advanced HR Analytics Engine</p>
+                            <h1
+                                style="margin: 0; font-size: 24px; background: linear-gradient(135deg, #4f46e5, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                Portal Intelligence</h1>
+                            <p style="margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 500;">Advanced
+                                HR Analytics Engine</p>
                         </div>
                     </div>
-                    <div class="total-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 0 10px rgba(16, 185, 129, 0.1); display: flex; align-items: center;">
-                        <span style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 8px; animation: pulse 2s infinite;"></span>
+                    <div class="total-badge"
+                        style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 0 10px rgba(16, 185, 129, 0.1); display: flex; align-items: center;">
+                        <span
+                            style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 8px; animation: pulse 2s infinite;"></span>
                         System Online
                     </div>
                 </header>
 
-                <div style="display: flex; flex-direction: column; height: 70vh; background: var(--surface); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 0 40px rgba(99, 102, 241, 0.05); overflow: hidden; position: relative;">
-                    
-                    <!-- Decorative background glow -->
-                    <div style="position: absolute; top: -150px; right: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none;"></div>
-                    <div style="position: absolute; bottom: -100px; left: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none;"></div>
+                <div
+                    style="display: flex; flex-direction: column; height: 70vh; background: var(--surface); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 0 40px rgba(99, 102, 241, 0.05); overflow: hidden; position: relative;">
 
-                    <div id="dashboard-chat-messages" style="flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: transparent; font-size: 15px; position: relative; z-index: 1;">
-                        
+                    <!-- Decorative background glow -->
+                    <div
+                        style="position: absolute; top: -150px; right: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none;">
+                    </div>
+                    <div
+                        style="position: absolute; bottom: -100px; left: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none;">
+                    </div>
+
+                    <div id="dashboard-chat-messages"
+                        style="flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; background: transparent; font-size: 15px; position: relative; z-index: 1;">
+
                         <!-- Initial Greeting -->
                         <div style="display: flex; gap: 15px; align-self: flex-start; max-width: 85%;">
-                            <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);">
+                            <div
+                                style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #a855f7); display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);">
                                 🤖
                             </div>
-                            <div style="background: white; border: 1px solid rgba(99, 102, 241, 0.1); color: var(--text-main); padding: 16px 20px; border-radius: 0 20px 20px 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); line-height: 1.6;">
-                                <strong style="display: block; margin-bottom: 8px; color: #4f46e5; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Portal AI</strong>
-                                Hello! I am your advanced HR analytics engine. I have full access to your employee database. What insights can I uncover for you today?
+                            <div
+                                style="background: white; border: 1px solid rgba(99, 102, 241, 0.1); color: var(--text-main); padding: 16px 20px; border-radius: 0 20px 20px 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03); line-height: 1.6;">
+                                <strong
+                                    style="display: block; margin-bottom: 8px; color: #4f46e5; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Portal
+                                    AI</strong>
+                                Hello! I am your advanced HR analytics engine. I have full access to your employee
+                                database. What insights can I uncover for you today?
                             </div>
                         </div>
 
                     </div>
 
-                    <div style="padding: 20px 30px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-top: 1px solid rgba(99, 102, 241, 0.1); display: flex; gap: 15px; align-items: center; position: relative; z-index: 1;">
+                    <div
+                        style="padding: 20px 30px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); border-top: 1px solid rgba(99, 102, 241, 0.1); display: flex; gap: 15px; align-items: center; position: relative; z-index: 1;">
                         <div style="flex: 1; position: relative;">
                             <input type="text" id="dashboard-chat-input"
                                 placeholder="Ask anything (E.g., Who has the lowest overall percentage?)"
                                 style="width: 100%; padding: 16px 20px 16px 50px; border-radius: 16px; border: 2px solid transparent; background: #f8fafc; outline: none; font-size: 15px; transition: all 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);"
                                 onfocus="this.style.background='#fff'; this.style.border='2px solid #a855f7'; this.style.boxShadow='0 0 0 4px rgba(168, 85, 247, 0.1)';"
                                 onblur="this.style.background='#f8fafc'; this.style.border='2px solid transparent'; this.style.boxShadow='inset 0 2px 4px rgba(0,0,0,0.02)';">
-                            <span style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #a855f7; font-size: 18px;">✨</span>
+                            <span
+                                style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #a855f7; font-size: 18px;">✨</span>
                         </div>
                         <button onclick="sendDashboardChatMessage()" class="primary-btn"
                             style="border-radius: 16px; padding: 16px 32px; font-weight: 600; background: linear-gradient(135deg, #6366f1, #a855f7); border: none; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); display: flex; align-items: center; gap: 8px; transition: all 0.3s;">
@@ -829,7 +870,8 @@
                     <h1>⚠️ Employee Complaints Hub</h1>
                     <div style="display: flex; gap: 15px; align-items: center;">
                         <span style="font-size: 13px; font-weight: 700; color: var(--primary);">STATUS FILTER:</span>
-                        <select id="complaints-filter" onchange="renderComplaintsTable()" style="padding: 8px 12px; width: auto;">
+                        <select id="complaints-filter" onchange="renderComplaintsTable()"
+                            style="padding: 8px 12px; width: auto;">
                             <option value="all" selected>All Complaints</option>
                             <option value="Open">Open Issues</option>
                             <option value="Resolved">Resolved Issues</option>
@@ -851,24 +893,30 @@
                 </div>
             </section>
         </main>
-        
+
         <!-- ATTENDANCE SPECIFIC MODAL -->
         <div id="attendance-modal" class="modal">
             <div class="modal-content" style="max-width: 600px;">
                 <button class="close-btn" onclick="closeAttendanceModal()">×</button>
-                <h2 style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">Detailed Attendance Records</h2>
-                
-                <div style="display: flex; gap: 15px; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 15px;">
-                    <img id="att-modal-image" src="" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: none;">
+                <h2 style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">Detailed Attendance Records
+                </h2>
+
+                <div
+                    style="display: flex; gap: 15px; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; margin-bottom: 15px;">
+                    <img id="att-modal-image" src=""
+                        style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; display: none;">
                     <div>
                         <h3 id="att-modal-name" style="color: var(--primary); font-size: 20px; font-weight: 600;">-</h3>
-                        <p id="att-modal-meta" style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">-</p>
+                        <p id="att-modal-meta"
+                            style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">-</p>
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 15px; align-items: center; justify-content: space-between; background: var(--primary-light); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                <div
+                    style="display: flex; gap: 15px; align-items: center; justify-content: space-between; background: var(--primary-light); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
                     <span style="font-size: 13px; font-weight: 700; color: var(--primary);">TIMEFRAME FILTER:</span>
-                    <select id="att-timeframe-select" onchange="filterAttendanceOnlyHistory()" style="padding: 8px 14px; font-size: 13px; width: auto; border-color: var(--primary);">
+                    <select id="att-timeframe-select" onchange="filterAttendanceOnlyHistory()"
+                        style="padding: 8px 14px; font-size: 13px; width: auto; border-color: var(--primary);">
                         <option value="all">All Time</option>
                         <option value="day">Today</option>
                         <option value="week">This Week</option>
@@ -877,7 +925,9 @@
                     </select>
                 </div>
 
-                <div id="att-modal-timeline" style="display: block; padding: 15px; background: #fdfcff; border-radius: 8px; border: 1px dashed var(--border); min-height: 100px;"></div>
+                <div id="att-modal-timeline"
+                    style="display: block; padding: 15px; background: #fdfcff; border-radius: 8px; border: 1px dashed var(--border); min-height: 100px;">
+                </div>
             </div>
         </div>
 
@@ -889,15 +939,18 @@
                 <form id="complaint-form" onsubmit="submitComplaintForm(event)">
                     <div class="form-group full">
                         <label>Employee Name</label>
-                        <input type="text" id="comp-emp-name" readonly style="background: var(--bg-body); cursor: not-allowed; border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); width: 100%; outline: none; font-weight: 600; color: var(--primary);">
+                        <input type="text" id="comp-emp-name" readonly
+                            style="background: var(--bg-body); cursor: not-allowed; border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); width: 100%; outline: none; font-weight: 600; color: var(--primary);">
                     </div>
                     <div class="form-group full">
                         <label>Date Filed</label>
-                        <input type="date" id="comp-date" required style="border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); width: 100%; outline: none; font-family: 'Poppins', sans-serif;">
+                        <input type="date" id="comp-date" required
+                            style="border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); width: 100%; outline: none; font-family: 'Poppins', sans-serif;">
                     </div>
                     <div class="form-group full">
                         <label>Severity Level</label>
-                        <select id="comp-severity" required style="border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); width: 100%; outline: none; font-family: 'Poppins', sans-serif;">
+                        <select id="comp-severity" required
+                            style="border: 1px solid var(--border); padding: 12px; border-radius: var(--radius); width: 100%; outline: none; font-family: 'Poppins', sans-serif;">
                             <option value="Low">Low Priority</option>
                             <option value="Medium" selected>Medium Priority</option>
                             <option value="High">High Priority</option>
@@ -905,11 +958,14 @@
                     </div>
                     <div class="form-group full">
                         <label>Complaint Description</label>
-                        <textarea id="comp-description" rows="4" required style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); outline: none; font-family: 'Poppins', sans-serif; resize: vertical;"></textarea>
+                        <textarea id="comp-description" rows="4" required
+                            style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); outline: none; font-family: 'Poppins', sans-serif; resize: vertical;"></textarea>
                     </div>
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
-                        <button type="button" class="primary-btn" style="background-color: var(--text-muted); flex: 1;" onclick="closeComplaintModal()">Cancel</button>
-                        <button type="submit" class="primary-btn" style="background-color: #b91c1c; flex: 1;">Submit Complaint</button>
+                        <button type="button" class="primary-btn" style="background-color: var(--text-muted); flex: 1;"
+                            onclick="closeComplaintModal()">Cancel</button>
+                        <button type="submit" class="primary-btn" style="background-color: #b91c1c; flex: 1;">Submit
+                            Complaint</button>
                     </div>
                 </form>
             </div>
@@ -919,7 +975,8 @@
         <div id="complaints-history-modal" class="modal" style="z-index: 2600;">
             <div class="modal-content" style="max-width: 800px;">
                 <button class="close-btn" onclick="closeComplaintHistoryModal()">×</button>
-                <h2 id="ch-modal-name" style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">Complaints History</h2>
+                <h2 id="ch-modal-name" style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">Complaints
+                    History</h2>
                 <div class="table-container" style="max-height: 400px; overflow-y: auto;">
                     <table style="width: 100%;">
                         <thead>
@@ -938,7 +995,8 @@
         </div>
 
         <div id="employee-modal" class="modal">
-            <div class="modal-content" style="max-width: 98vw; height: 95vh; max-height: 95vh; padding: 30px; display: flex; flex-direction: column;">
+            <div class="modal-content"
+                style="max-width: 98vw; height: 95vh; max-height: 95vh; padding: 30px; display: flex; flex-direction: column;">
                 <button class="close-btn" onclick="closeModal()">×</button>
                 <h2 id="modal-title" style="color: var(--primary); margin-bottom: 25px; font-weight: 600;">System
                     Actions</h2>
@@ -1044,12 +1102,13 @@
                     <button type="submit" class="primary-btn" style="width: 100%; margin-top: 20px;">Save Data</button>
                 </form>
 
-                <div id="history-view" class="profile-view" style="display: none; flex: 1; flex-direction: column; gap: 18px;">
+                <div id="history-view" class="profile-view"
+                    style="display: none; flex: 1; flex-direction: column; gap: 18px;">
                     <div
                         style="border-bottom: 2px solid var(--border); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px;">
                         <div style="display: flex; gap: 15px; align-items: center;">
                             <img id="hist-emp-image" src=""
-                                style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; display: none;">
+                                style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">
                             <div>
                                 <h3 id="hist-emp-name"
                                     style="color: var(--primary); font-size: 22px; font-weight: 600;">-
@@ -1088,7 +1147,8 @@
                                 style="background-color: #f59e0b; font-size: 13px; padding: 10px 18px; flex: 1; text-align: center; white-space: normal;"
                                 onclick="openComplaintModal()">Add Complaint</button>
                             <button class="primary-btn" id="modal-add-log-btn"
-                                style="background-color: #059669; font-size: 13px; padding: 10px 18px; flex: 1; text-align: center; min-width: 160px; white-space: normal;">+ Add Today's Work Log</button>
+                                style="background-color: #059669; font-size: 13px; padding: 10px 18px; flex: 1; text-align: center; min-width: 160px; white-space: normal;">+
+                                Add Today's Work Log</button>
                         </div>
                     </div>
                     <div
@@ -1104,8 +1164,7 @@
                             <option value="year">Added This Year</option>
                         </select>
                     </div>
-                    <div class="table-container"
-                        style="flex: 1; overflow-y: auto; border-color: var(--primary-light);">
+                    <div class="table-container" style="flex: 1; overflow-y: auto; border-color: var(--primary-light);">
                         <table class="inner-history-table" style="min-width: 100%;">
                             <thead>
                                 <tr style="background: #fdfcff; border-bottom: 2px solid var(--border);">
@@ -1127,7 +1186,7 @@
                         <div class="data-row full"
                             style="grid-column: 1 / -1; justify-content: center; background: none; border: none;">
                             <img id="view-image" src=""
-                                style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: none;">
+                                style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
                         </div>
                         <div class="data-row"><span>Full Name</span><strong id="view-name"
                                 style="color:var(--text-main);"></strong></div>
@@ -1176,11 +1235,12 @@
                     </div>
                     <div style="display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap;">
                         <button class="primary-btn" id="trigger-back-history-btn"
-                            style="background-color: var(--text-muted); flex: 1; min-width: 150px;">← Back to History</button>
-                        <button class="primary-btn" id="trigger-delete-log-btn" 
+                            style="background-color: var(--text-muted); flex: 1; min-width: 150px;">← Back to
+                            History</button>
+                        <button class="primary-btn" id="trigger-delete-log-btn"
                             style="background-color: #ef4444; flex: 1; min-width: 150px;">Delete Work Log</button>
-                        <button class="primary-btn" id="trigger-edit-btn" 
-                            style="flex: 1; min-width: 150px;">Edit Entry Settings</button>
+                        <button class="primary-btn" id="trigger-edit-btn" style="flex: 1; min-width: 150px;">Edit Entry
+                            Settings</button>
                     </div>
                 </div>
             </div>
@@ -1202,14 +1262,23 @@
 
         async function fetchImageByName(name, imgId) {
             const imgEl = document.getElementById(imgId);
-            
+
+            // Generate initials avatar as fallback
+            function getInitialsAvatar(n) {
+                const initials = n.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+                const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#f97316', '#10b981', '#0ea5e9', '#6d28d9'];
+                const color = colors[n.length % colors.length];
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><rect width="150" height="150" rx="75" fill="${color}"/><text x="75" y="75" font-family="Arial,sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">${initials}</text></svg>`;
+                return 'data:image/svg+xml;base64,' + btoa(svg);
+            }
+
             if (imageCache[name]) {
                 imgEl.src = imageCache[name];
                 imgEl.style.display = 'block';
                 return;
             }
 
-            imgEl.src = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+            imgEl.src = getInitialsAvatar(name);
             imgEl.style.display = 'block';
 
             try {
@@ -1219,14 +1288,10 @@
                     if (data.image) {
                         imageCache[name] = data.image;
                         imgEl.src = data.image;
-                    } else {
-                        imgEl.style.display = 'none';
                     }
-                } else {
-                    imgEl.style.display = 'none';
                 }
-            } catch(e) {
-                imgEl.style.display = 'none';
+            } catch (e) {
+                // Fallback avatar already set, no action needed
             }
         }
 
@@ -1254,7 +1319,7 @@
             document.getElementById('attendance-modal').style.display = 'flex';
             document.getElementById('att-modal-name').innerText = name;
             document.getElementById('att-modal-meta').innerText = `Designation: ${latestLog.designation || 'Staff'} | Mobile: ${latestLog.mobile || '-'}`;
-            
+
             fetchImageByName(name, 'att-modal-image');
 
             // Sync timeframe with current sheet
@@ -1279,7 +1344,7 @@
                         const month = parseInt(parts[1]) - 1;
                         const day = parseInt(parts[2]);
                         const yearMonth = parts[0] + '-' + parts[1];
-                        
+
                         if (!groupedByMonth[yearMonth]) {
                             groupedByMonth[yearMonth] = { year, month, logs: {} };
                         }
@@ -1320,7 +1385,7 @@
                             else if (status === 'UL') { color = '#d97706'; bg = '#fef3c7'; text = 'UL'; }
                             else if (status === 'HD') { color = '#2563eb'; bg = '#dbeafe'; text = 'HD'; }
                             else if (status === 'PL') { color = '#7c3aed'; bg = '#ede9fe'; text = 'PL'; }
-                            
+
                             html += `<td style="padding: 8px 4px; border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: ${color}; background: ${bg};" title="Date: ${i} ${monthName}">${text}</td>`;
                         } else {
                             html += `<td style="padding: 8px 4px; border: 1px solid var(--border); font-size: 13px; background: var(--bg-body);"></td>`;
@@ -1331,7 +1396,7 @@
                                 </table>
                              </div>`;
                 });
-                
+
                 timelineContainer.innerHTML = html;
             } else {
                 timelineContainer.innerHTML = `<div style="color: var(--text-muted); font-size: 14px; width: 100%; text-align: center; padding: 20px;">No attendance records found for this timeframe.</div>`;
@@ -1494,6 +1559,14 @@
 
             document.getElementById('hist-emp-name').innerText = name;
             document.getElementById('hist-emp-meta').innerText = `Designation: ${latestLog.designation || 'Staff'} | Mobile: ${latestLog.mobile || '-'}`;
+
+            // Set initials avatar INSTANTLY, then upgrade to real photo if available
+            const histImg = document.getElementById('hist-emp-image');
+            const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+            const avatarColors = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#f97316', '#10b981', '#0ea5e9', '#6d28d9'];
+            const avatarColor = avatarColors[name.length % avatarColors.length];
+            const avatarSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150"><rect width="150" height="150" rx="75" fill="${avatarColor}"/><text x="75" y="75" font-family="Arial,sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">${initials}</text></svg>`;
+            histImg.src = imageCache[name] || ('data:image/svg+xml;base64,' + btoa(avatarSvg));
             fetchImageByName(name, 'hist-emp-image');
 
             const isLeft = latestLog.status === 'Left';
@@ -1690,7 +1763,7 @@
             };
 
             document.getElementById('trigger-delete-log-btn').onclick = async () => {
-                if(!confirm("Are you sure you want to permanently delete this specific log entry? This action cannot be undone.")) return;
+                if (!confirm("Are you sure you want to permanently delete this specific log entry? This action cannot be undone.")) return;
                 try {
                     const response = await fetch(`${API_BASE_URL}/${emp._id}`, { method: 'DELETE' });
                     if (response.ok) {
@@ -1698,7 +1771,7 @@
                         document.getElementById('detail-view').style.display = 'none';
                         document.getElementById('history-view').style.display = 'flex';
                         document.getElementById('modal-title').innerText = 'Work History Tracking Records';
-                        
+
                         await fetchAllEmployees();
                         if (currentHistoryName) {
                             viewEmployeeDetails(currentHistoryName);
@@ -2007,12 +2080,24 @@
                     body: JSON.stringify(data)
                 });
                 if (response.ok) {
-                    // Fetch accurate data from DB while button shows "Saving..."
-                    await loadData();
+                    // Clear cached image so fresh upload shows immediately
+                    if (imageCache[enteredName]) delete imageCache[enteredName];
 
-                    // Now safely transition views
+                    // Load fresh data + pre-warm image in parallel BEFORE switching views
                     currentHistoryName = enteredName;
+                    await Promise.all([
+                        fetchAllEmployees(),
+                        fetchComplaints(),
+                        fetch(`${API_BASE_URL}/imageByName/${encodeURIComponent(enteredName)}`).then(r => r.json()).then(d => { if (d.image) imageCache[enteredName] = d.image; }).catch(() => {})
+                    ]);
+                    const uniqueNames = [...new Set(employees.map(emp => emp.name))];
+                    document.getElementById('total-count').innerText = uniqueNames.length;
+
+                    // Data is ready — now smoothly transition views (no glitch)
                     document.getElementById('employee-form').style.display = 'none';
+                    submitBtn.innerText = originalBtnText;
+                    submitBtn.style.pointerEvents = 'auto';
+                    submitBtn.style.opacity = '1';
 
                     if (mode === 'new_profile') {
                         showToast('Welcome Aboard!', `Profile for ${enteredName} has been created.`, 'success', '🎉');
@@ -2025,10 +2110,6 @@
                     }
 
                     viewEmployeeDetails(currentHistoryName);
-
-                    submitBtn.innerText = originalBtnText;
-                    submitBtn.style.pointerEvents = 'auto';
-                    submitBtn.style.opacity = '1';
 
                 } else {
                     let errorMsg = "Operation server database error routing response.";
@@ -2190,7 +2271,7 @@
 
             empNames.forEach(name => {
                 const stats = grouped[name];
-                let openBadge = stats.open > 0 
+                let openBadge = stats.open > 0
                     ? `<span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">${stats.open} Open</span>`
                     : `<span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">All Resolved</span>`;
 
@@ -2223,7 +2304,7 @@
         function viewComplaintHistory(empName) {
             document.getElementById('complaints-history-modal').style.display = 'flex';
             document.getElementById('ch-modal-name').innerText = empName + " - Complaints Records";
-            
+
             document.getElementById('complaints-history-modal').setAttribute('data-empname', empName);
 
             const empComplaints = complaintsData.filter(c => c.empName === empName);
@@ -2237,7 +2318,7 @@
 
             empComplaints.forEach(comp => {
                 let severityColor = comp.severity === 'High' ? '#b91c1c' : (comp.severity === 'Medium' ? '#f59e0b' : '#059669');
-                let statusBadge = comp.status === 'Resolved' 
+                let statusBadge = comp.status === 'Resolved'
                     ? `<span style="background: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">Resolved</span>`
                     : `<span style="background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600;">Open</span>`;
 
@@ -2289,13 +2370,13 @@
         }
 
         async function resolveComplaint(id) {
-            if(!confirm("Mark this complaint as resolved?")) return;
+            if (!confirm("Mark this complaint as resolved?")) return;
             try {
                 const res = await fetch(COMPLAINTS_API_URL + '/' + id + '/resolve', { method: 'PUT' });
                 if (res.ok) {
                     showToast('Resolved', 'Complaint has been marked resolved.', 'success', '✅');
                     await fetchComplaints();
-                    
+
                     const modal = document.getElementById('complaints-history-modal');
                     if (modal.style.display === 'flex') {
                         const empName = modal.getAttribute('data-empname');
@@ -2308,13 +2389,13 @@
         }
 
         async function deleteComplaint(id) {
-            if(!confirm("Permanently delete this complaint?")) return;
+            if (!confirm("Permanently delete this complaint?")) return;
             try {
                 const res = await fetch(COMPLAINTS_API_URL + '/' + id, { method: 'DELETE' });
                 if (res.ok) {
                     showToast('Deleted', 'Complaint deleted.', 'success', '🗑️');
                     await fetchComplaints();
-                    
+
                     const modal = document.getElementById('complaints-history-modal');
                     if (modal.style.display === 'flex') {
                         const empName = modal.getAttribute('data-empname');
